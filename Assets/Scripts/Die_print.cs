@@ -7,7 +7,7 @@ using InnerDriveStudios.DiceCreator;
 public class Die_print : MonoBehaviour
 {
     [SerializeField]
-    private ARollable die;
+    private ARollable[] dies;
 
     public Text R_txt;
 
@@ -25,13 +25,22 @@ public class Die_print : MonoBehaviour
 
     void Print_result()
     {
-        IRollResult result = die.GetRollResult();
+        string resultColor;
 
-        string resultColor = (die.HasEndResult() && result.isExact) ? "green" : "blue";
-        //only show values if we are NOT rolling OR updating every frame
-        string resultValues =
-            (!die.isRolling) ? result.valuesAsString : "*";
+        int resultValue = 0;
 
-        R_txt.text = string.Format("<color={0}>{1} = {2}</color>", resultColor, die.name, resultValues);
+        for (int i = 0; i < dies.Length; i++)
+        {
+            IRollResult result = dies[i].GetRollResult();
+
+            resultColor = (dies[i].HasEndResult() && result.isExact) ? "green" : "blue";
+
+            //only show values if we are NOT rolling OR updating every frame
+            resultValue +=
+                (!dies[i].isRolling) ? int.Parse(result.valuesAsString) : int.Parse("0");
+        }
+        
+
+        R_txt.text = string.Format("°á°ú = {0}", resultValue);
     }
 }
