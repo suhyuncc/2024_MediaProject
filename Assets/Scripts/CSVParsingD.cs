@@ -56,7 +56,6 @@ public class CSVParsingD : MonoBehaviour
     {
         if (isFirstOn == true)
         {
-            Debug.Log("l");
             isFirstOn = false;
             SetDict();
         }
