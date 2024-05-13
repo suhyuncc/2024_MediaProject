@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 //gh
 public class Dialogue_Manage : MonoBehaviour
 {
     public string eventName; // eventName 수령 받을 곳
-    [SerializeField]
-    private Text nameText; //화자
+    //private Text nameText; //화자
     [SerializeField]
     private Text contextText; //대화
     [SerializeField]
@@ -22,6 +22,8 @@ public class Dialogue_Manage : MonoBehaviour
     private GameObject dialoguePanel; //대화panel
     [SerializeField]
     private GameObject dialogueImagePanel; //Image들이 저장되어있는 패널
+    [SerializeField]
+    private GameObject SelectBoxes; //Image들이 저장되어있는 패널
 
     [SerializeField]
     private bool isPrevDialogue = false;
@@ -90,7 +92,7 @@ public class Dialogue_Manage : MonoBehaviour
             //background.transform.GetChild(gm.GetComponent<GameManager>().GetStageNumber()).gameObject.SetActive(true);
             dialogueData = CSVParsingD.GetDialogue(eventName); // 화자 타입, 화자 이름, 대사를 원하는 이벤트에 있는 내용을 가져옴
             endTriangle.SetActive(false);
-            nameText.text = dialogueData[0].name;
+            //nameText.text = dialogueData[0].name;
             if (dialogueImagePanel.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false)
             {
                 Debug.Log(dialogueData[0].speakerType);
@@ -100,110 +102,138 @@ public class Dialogue_Manage : MonoBehaviour
             dataIndex = 0;
             contextIndex = 0;
             currentTypeEnd = false;
+            //타이핑 코루틴
             typingText = TypingMotion();
+            //타이핑 될 문장
             toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
             StartCoroutine(typingText);
         }//EventName을 받아왔을 때
 
-        if(currentDialogue)
+        //다이알로그 진행중이고 클릭이 되면
+        if(currentDialogue && Input.GetMouseButtonDown(0))
         {
-            if(Input.GetMouseButtonDown(0))
+            //코루틴이 끝났는지
+            if (currentTypeEnd)
             {
-                if (currentTypeEnd)
+                //지금 출력중인 문장이 다 출력 안되어있으면
+                if (contextIndex < dialogueData[dataIndex].dialogue_Context.Length - 1)
                 {
-                    if (contextIndex < dialogueData[dataIndex].dialogue_Context.Length - 1)
+                    //나머지 싹다 출력
+                    contextIndex++;
+                    currentTypeEnd = false;
+                    typingText = TypingMotion();
+                    endTriangle.SetActive(false);
+                    toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
+                    StartCoroutine(typingText);
+                }
+                //지금 출력중인 문장이 다 출력 되어있으면
+                else if (contextIndex >= dialogueData[dataIndex].dialogue_Context.Length - 1)
+                {
+                    contextIndex = 0;
+                    dataIndex++;
+                    //다음 출력할 문장 있으면
+                    if (dataIndex < dialogueData.Length)
                     {
-                        contextIndex++;
-                        currentTypeEnd= false;
+                        //nameText.text = dialogueData[dataIndex].name;
+                        currentTypeEnd = false;
                         typingText = TypingMotion();
                         endTriangle.SetActive(false);
                         toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
-                        StartCoroutine(typingText);
-                    }
-                    else if (contextIndex >= dialogueData[dataIndex].dialogue_Context.Length - 1)
-                    {
-                        contextIndex = 0;
-                        dataIndex++;
-                        if (dataIndex < dialogueData.Length)
+
+                        if (dialogueImagePanel.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
                         {
-                            nameText.text = dialogueData[dataIndex].name;
-                            currentTypeEnd = false;
-                            typingText = TypingMotion();
-                            endTriangle.SetActive(false);
-                            toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
-
-                            if (dialogueImagePanel.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
-                            {
-                                //Debug.Log(dialogueData[dataIndex].speakerType);
-                                GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
-                                Color _prevColor = _prevImage.GetComponent<RawImage>().color;
-                                _prevColor.a = 0.3f;
-                                _prevImage.GetComponent<RawImage>().color = _prevColor; //여기까지 알파값 바까주고---------
-                                previousImage = dialogueData[dataIndex].speakerType;
-                                dialogueImagePanel.transform.GetChild(previousImage).gameObject.SetActive(true);
-                            }
-                            else
-                            {
-                                GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
-                                Color _prevColor = _prevImage.GetComponent<RawImage>().color;
-                                _prevColor.a = 0.3f;
-                                _prevImage.GetComponent<RawImage>().color = _prevColor;
-                                previousImage = dialogueData[dataIndex].speakerType;
-                                _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
-                                _prevColor = _prevImage.GetComponent<RawImage>().color;
-                                _prevColor.a = 1.0f;
-                                _prevImage.GetComponent<RawImage>().color = _prevColor;
-                            }
-
-                            StartCoroutine(typingText); ;
+                            //Debug.Log(dialogueData[dataIndex].speakerType);
+                            GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            Color _prevColor = _prevImage.GetComponent<RawImage>().color;
+                            _prevColor.a = 0.3f;
+                            _prevImage.GetComponent<RawImage>().color = _prevColor; //여기까지 알파값 바까주고---------
+                            previousImage = dialogueData[dataIndex].speakerType;
+                            dialogueImagePanel.transform.GetChild(previousImage).gameObject.SetActive(true);
                         }
                         else
                         {
-                            currentDialogue = false;
-                            
-                            if(isBothDialoguein1Time)
+                            GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            Color _prevColor = _prevImage.GetComponent<RawImage>().color;
+                            _prevColor.a = 0.3f;
+                            _prevImage.GetComponent<RawImage>().color = _prevColor;
+                            previousImage = dialogueData[dataIndex].speakerType;
+                            _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            _prevColor = _prevImage.GetComponent<RawImage>().color;
+                            _prevColor.a = 1.0f;
+                            _prevImage.GetComponent<RawImage>().color = _prevColor;
+                        }
+
+                        StartCoroutine(typingText); ;
+                    }
+                    //다음 출력할 문장 없으면
+                    else
+                    {
+                        currentDialogue = false;
+
+                        if (dialogueData[dataIndex - 1].is_select == "1")
+                        {
+                            //선택지 보여주기
+                            selectbox();
+                        }
+
+                        if (isBothDialoguein1Time)
+                        {
+                            isBothDialoguein1Time = false;
+                            GetEventName(eventNameIf2Event);
+
+                        }
+                        else if (!isPrevDialogue)
+                        {
+                            //gm.GetComponent<GameManager>().currentState = state.idle;
+                            //gm.GetComponent<GameManager>().MapManager.GetComponent<MapManagement>().ReturnScene();
+                            dialoguePanel.SetActive(false);//Dialogue UI
+                        }
+                        else
+                        {
+                            if (isBothDialogue)
                             {
-                                isBothDialoguein1Time= false;
-                                GetEventName(eventNameIf2Event);
-                                
+                                //gm.GetComponent<GameManager>().SetEventName(eventNameIf2Event);
                             }
-                            else if (!isPrevDialogue)
-                            {
-                                //gm.GetComponent<GameManager>().currentState = state.idle;
-                                //gm.GetComponent<GameManager>().MapManager.GetComponent<MapManagement>().ReturnScene();
-                                dialoguePanel.SetActive(false);//Dialogue UI
-                            }
-                            else
-                            {
-                                if (isBothDialogue)
-                                {
-                                    //gm.GetComponent<GameManager>().SetEventName(eventNameIf2Event);
-                                }
-                                //gm.GetComponent<GameManager>().StartBattle(isStageNumber); //StartBattle!
-                            }
+                            //gm.GetComponent<GameManager>().StartBattle(isStageNumber); //StartBattle!
                         }
                     }
                 }
-                else
-                {
-                    StopCoroutine(typingText);
-                    contextText.text = toType;
-                    currentTypeEnd = true;
-                    endTriangle.SetActive(true);
-                }
+            }
+            else
+            {
+                StopCoroutine(typingText);
+                contextText.text = toType;
+                currentTypeEnd = true;
+                endTriangle.SetActive(true);
             }
         }
     }
     IEnumerator TypingMotion()
     {
         contextText.text = null;
-        for(int i = 0; i < toType.Length; i++)
+        for (int i = 0; i < toType.Length; i++)
         {
-            contextText.text+= toType[i];
+            contextText.text += toType[i];
             yield return new WaitForSeconds(0.15f);
         }
         currentTypeEnd = true;
         endTriangle.SetActive(true);
         yield break;
+    }
+
+    private void selectbox()
+    {
+        dialogueData = CSVParsingD.GetDialogue("select");
+        //박스키고
+        for (int i = 0; i < dialogueData[0].dialogue_Context.Length; i++)
+        {
+            SelectBoxes.transform.GetChild(i).gameObject.SetActive(true);
+        }
+        //글자 박고
+        for (int i = 0; i <dialogueData[0].dialogue_Context.Length; i++) {
+            SelectBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                = dialogueData[0].dialogue_Context[i];
+        }
+        
     }
 }

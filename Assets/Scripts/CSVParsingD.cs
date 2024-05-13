@@ -8,6 +8,7 @@ public class CSVParsingD : MonoBehaviour
     [SerializeField]
     private TextAsset csvFile = null;
     private static Dictionary<string, DialogueData[]> dialogueDict = new Dictionary<string, DialogueData[]>();
+    private static Dictionary<string, string[]> selection = new Dictionary<string, string[]>();
     static bool isFirstOn = true;
     public static DialogueData[] GetDialogue(string eventName)
     {
@@ -23,7 +24,10 @@ public class CSVParsingD : MonoBehaviour
         {
             string[] data = row[i].Split(new char[] { ',' }); //split by (,)
 
-            if (data[0].Trim() == "" || data[0].Trim() == "end") continue; //no event -> continue
+            if (data[0].Trim() == "" || data[0].Trim() == "end")
+            {
+                continue; //no event -> continue
+            }
 
             List<DialogueData> dataList = new List<DialogueData>();
             string eventName = data[0];
@@ -33,7 +37,7 @@ public class CSVParsingD : MonoBehaviour
                 List<string> contextList = new List<string>();
 
                 DialogueData dialogueData;
-                dialogueData.name = data[2];
+                dialogueData.is_select = data[2];
                 dialogueData.speakerType = Int32.Parse(data[1]);
                 do
                 {
@@ -47,8 +51,14 @@ public class CSVParsingD : MonoBehaviour
 
                 dialogueData.dialogue_Context= contextList.ToArray();
                 dataList.Add(dialogueData);
+                
+                
             }
             dialogueDict.Add(eventName, dataList.ToArray());
+        }
+        foreach(KeyValuePair<string, DialogueData[]> j in dialogueDict)
+        {
+            Debug.Log($"key = {j.Key}");
         }
     }
 
