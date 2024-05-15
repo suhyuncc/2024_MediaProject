@@ -3,9 +3,11 @@ using UnityEngine;
 [System.Serializable]
 public struct DialogueData
 {
-    public string is_select; //화자
-    public string[] dialogue_Context; // 대화 내용
     public int speakerType; // 현재 대화중인 대상 ... 현재 딱히 필요없어보임 아마, 오브젝트 
+    public string[] dialogue_Context; // 대화 내용
+    public string[] is_select; //화자
+    public string[] Secletion_Context; // 대화 내용
+    public string[] Next_event;
 }
 public class Dialogue : MonoBehaviour
 {

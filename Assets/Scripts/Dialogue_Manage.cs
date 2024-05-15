@@ -7,6 +7,8 @@ using UnityEngine.UI;
 //gh
 public class Dialogue_Manage : MonoBehaviour
 {
+    public static Dialogue_Manage Instance;
+
     public string eventName; // eventName 수령 받을 곳
     //private Text nameText; //화자
     [SerializeField]
@@ -17,7 +19,7 @@ public class Dialogue_Manage : MonoBehaviour
     public bool isDialogue = false; // recieve event
     private bool currentDialogue = false; // is current dialogue working
 
-    private DialogueData[] dialogueData; //대화 데이터
+    public DialogueData[] dialogueData; //대화 데이터
     [SerializeField]
     private GameObject dialoguePanel; //대화panel
     [SerializeField]
@@ -35,6 +37,11 @@ public class Dialogue_Manage : MonoBehaviour
     private string eventNameIf2Event = null;
     private bool isBothDialogue = false;
     private bool isBothDialoguein1Time = false;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void ItIsPreviousDialogue(int num)
     {
@@ -95,7 +102,7 @@ public class Dialogue_Manage : MonoBehaviour
             //nameText.text = dialogueData[0].name;
             if (dialogueImagePanel.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false)
             {
-                Debug.Log(dialogueData[0].speakerType);
+                //Debug.Log(dialogueData[0].speakerType);
                 previousImage = dialogueData[0].speakerType;
                 dialogueImagePanel.transform.GetChild(previousImage).gameObject.SetActive(true);
             }
@@ -129,11 +136,12 @@ public class Dialogue_Manage : MonoBehaviour
                 //지금 출력중인 문장이 다 출력 되어있으면
                 else if (contextIndex >= dialogueData[dataIndex].dialogue_Context.Length - 1)
                 {
-                    contextIndex = 0;
+                    
                     dataIndex++;
                     //다음 출력할 문장 있으면
                     if (dataIndex < dialogueData.Length)
                     {
+                        contextIndex = 0;
                         //nameText.text = dialogueData[dataIndex].name;
                         currentTypeEnd = false;
                         typingText = TypingMotion();
@@ -170,8 +178,9 @@ public class Dialogue_Manage : MonoBehaviour
                     {
                         currentDialogue = false;
 
-                        if (dialogueData[dataIndex - 1].is_select == "1")
+                        if (dialogueData[dataIndex - 1].is_select[contextIndex] == "1")
                         {
+                            contextIndex = 0;
                             //선택지 보여주기
                             selectbox();
                         }
@@ -186,7 +195,7 @@ public class Dialogue_Manage : MonoBehaviour
                         {
                             //gm.GetComponent<GameManager>().currentState = state.idle;
                             //gm.GetComponent<GameManager>().MapManager.GetComponent<MapManagement>().ReturnScene();
-                            dialoguePanel.SetActive(false);//Dialogue UI
+                            //dialoguePanel.SetActive(false);//Dialogue UI
                         }
                         else
                         {
@@ -224,16 +233,22 @@ public class Dialogue_Manage : MonoBehaviour
     private void selectbox()
     {
         dialogueData = CSVParsingD.GetDialogue("select");
-        //박스키고
-        for (int i = 0; i < dialogueData[0].dialogue_Context.Length; i++)
+        
+        for (int i = 0; i < dialogueData[0].Secletion_Context.Length; i++)
         {
+            //박스키고
             SelectBoxes.transform.GetChild(i).gameObject.SetActive(true);
-        }
-        //글자 박고
-        for (int i = 0; i <dialogueData[0].dialogue_Context.Length; i++) {
+
+            //글자 박고
             SelectBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
-                = dialogueData[0].dialogue_Context[i];
+                = dialogueData[0].Secletion_Context[i];
+
+            //다음 대사 알려주고
+            SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
+            Debug.Log($"setName: {dialogueData[0].Next_event[i]}");
+
         }
+        
         
     }
 }
