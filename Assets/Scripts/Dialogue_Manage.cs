@@ -184,7 +184,12 @@ public class Dialogue_Manage : MonoBehaviour
                             //선택지 보여주기
                             selectbox();
                         }
+                        else
+                        {
+                            dialoguePanel.SetActive(false);//Dialogue UI
+                        }
 
+                        /*
                         if (isBothDialoguein1Time)
                         {
                             isBothDialoguein1Time = false;
@@ -204,7 +209,7 @@ public class Dialogue_Manage : MonoBehaviour
                                 //gm.GetComponent<GameManager>().SetEventName(eventNameIf2Event);
                             }
                             //gm.GetComponent<GameManager>().StartBattle(isStageNumber); //StartBattle!
-                        }
+                        }*/
                     }
                 }
             }
@@ -245,7 +250,6 @@ public class Dialogue_Manage : MonoBehaviour
 
             //다음 대사 알려주고
             SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
-            Debug.Log($"setName: {dialogueData[0].Next_event[i]}");
 
         }
         

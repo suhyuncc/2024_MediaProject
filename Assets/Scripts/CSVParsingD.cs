@@ -55,7 +55,7 @@ public class CSVParsingD : MonoBehaviour
                     contextList.Add(data[3].ToString());
                     selectList.Add(data[4].ToString());
                     select_context_List.Add(data[5].ToString());
-                    Next_event_List.Add(data[6].ToString());
+                    Next_event_List.Add(data[6].Trim().ToString());
                     if (++i < row.Length)
                     {
                         data = row[i].Split(new char[] { ',' });

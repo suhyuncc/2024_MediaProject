@@ -27,7 +27,12 @@ public class SelectBox : MonoBehaviour
 
     public void Next_Dialouge()
     {
-        Debug.Log(next_Event.Equals("1"));
         Dialogue_Manage.Instance.GetEventName(next_Event.ToString());
+
+        for(int i = 0; i < this.transform.parent.childCount; i++)
+        {
+            //모든 선택창 감추기
+            this.transform.parent.transform.GetChild(i).gameObject.SetActive(false);
+        }
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3051,10 +3051,10 @@ RectTransform:
   - {fileID: 1809154174}
   - {fileID: 547257562}
   - {fileID: 920829593}
-  - {fileID: 1133735904}
-  - {fileID: 1733339153}
   - {fileID: 392706194}
   - {fileID: 458247712}
+  - {fileID: 1133735904}
+  - {fileID: 1733339153}
   - {fileID: 2127915756}
   - {fileID: 529240413}
   m_Father: {fileID: 0}
@@ -3695,6 +3695,7 @@ MonoBehaviour:
   contextText: {fileID: 1968154421}
   endTriangle: {fileID: 39018992}
   isDialogue: 0
+  dialogueData: []
   dialoguePanel: {fileID: 458247711}
   dialogueImagePanel: {fileID: 2138241798}
   SelectBoxes: {fileID: 2127915755}
