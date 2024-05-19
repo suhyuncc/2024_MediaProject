@@ -34,15 +34,19 @@ public class Menual_Drag : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        //이미지 이동
-        this.GetComponent<RectTransform>().anchoredPosition = new Vector3((Input.mousePosition.x - 960.0f) - relative_pos.x,
-            this.transform.position.y, this.transform.position.z);
+        
 
         //도착위치보다 넘어갔다면
-        if (this.GetComponent<RectTransform>().anchoredPosition.x > arrive_pos.x && is_On)
+        if (this.GetComponent<RectTransform>().anchoredPosition.x >= arrive_pos.x && is_On)
         {
             this.GetComponent<RectTransform>().anchoredPosition = new Vector3(arrive_pos.x,
             this.transform.position.y, this.transform.position.z);
+        }
+        else
+        {
+            //이미지 이동
+            this.GetComponent<RectTransform>().anchoredPosition = new Vector3((Input.mousePosition.x - 960.0f) - relative_pos.x,
+                this.transform.position.y, this.transform.position.z);
         }
     }
 
