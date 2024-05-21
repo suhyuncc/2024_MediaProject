@@ -8,6 +8,7 @@ public struct DialogueData
     public string[] is_select; //화자
     public string[] Secletion_Context; // 대화 내용
     public string[] Next_event;
+    public int image_serialNum; // 배경 시리얼 넘버
 }
 public class Dialogue : MonoBehaviour
 {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,33 +11,33 @@ public class Dialogue_Manage : MonoBehaviour
     public static Dialogue_Manage Instance;
 
     public string eventName; // eventName 수령 받을 곳
-    //private Text nameText; //화자
+    public DialogueData[] dialogueData; //대화 데이터
     [SerializeField]
-    private Text contextText; //대화
-    [SerializeField]
-    private GameObject endTriangle; //끝나면 깜빡거리는 삼각형
-
+    private bool isPrevDialogue = false;
     public bool isDialogue = false; // recieve event
     private bool currentDialogue = false; // is current dialogue working
 
-    public DialogueData[] dialogueData; //대화 데이터
+    [Header("UI")]
+    [SerializeField]
+    private GameObject endTriangle; //끝나면 깜빡거리는 삼각형
     [SerializeField]
     private GameObject dialoguePanel; //대화panel
     [SerializeField]
-    private GameObject dialogueImagePanel; //Image들이 저장되어있는 패널
+    private GameObject _characters; //Image들이 저장되어있는 패널
     [SerializeField]
     private GameObject SelectBoxes; //Image들이 저장되어있는 패널
+    [SerializeField]
+    private Text contextText; //대화
 
+    [Header("Background")]
     [SerializeField]
-    private bool isPrevDialogue = false;
+    private RawImage _background;
     [SerializeField]
-    private int isStageNumber = 0;
-    [SerializeField]
-    private GameObject background;
+    private Texture[] backgrounds;
 
-    private string eventNameIf2Event = null;
-    private bool isBothDialogue = false;
-    private bool isBothDialoguein1Time = false;
+    
+    
+
 
     private void Awake()
     {
@@ -46,21 +47,8 @@ public class Dialogue_Manage : MonoBehaviour
     public void ItIsPreviousDialogue(int num)
     {
         isPrevDialogue= true;
-        isStageNumber = num;
     }
 
-    public void ItisDoubleDialogue(string event1, string event2)
-    {
-        isBothDialoguein1Time= true;
-        GetEventName(event1);
-        eventNameIf2Event = event2;
-    }
-
-    public void ItIsBothDialogue(string _eventName)
-    {
-        eventNameIf2Event = _eventName;
-        isBothDialogue = true;
-    }
 
     public void GetEventName(string _eventName) //eventName 수령받는 함수
     {
@@ -86,11 +74,11 @@ public class Dialogue_Manage : MonoBehaviour
 
         if(isDialogue)
         {
-            for(int t = 0; t< dialogueImagePanel.transform.childCount; t++)
+            for(int t = 0; t< _characters.transform.childCount; t++)
             {
-                if (dialogueImagePanel.transform.GetChild(t).gameObject.activeSelf)
+                if (_characters.transform.GetChild(t).gameObject.activeSelf)
                 {
-                    dialogueImagePanel.transform.GetChild(t).gameObject.SetActive(false);
+                    _characters.transform.GetChild(t).gameObject.SetActive(false);
                 }
             }
             isDialogue = false;
@@ -100,11 +88,11 @@ public class Dialogue_Manage : MonoBehaviour
             dialogueData = CSVParsingD.GetDialogue(eventName); // 화자 타입, 화자 이름, 대사를 원하는 이벤트에 있는 내용을 가져옴
             endTriangle.SetActive(false);
             //nameText.text = dialogueData[0].name;
-            if (dialogueImagePanel.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false)
+            if (_characters.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false)
             {
                 //Debug.Log(dialogueData[0].speakerType);
                 previousImage = dialogueData[0].speakerType;
-                dialogueImagePanel.transform.GetChild(previousImage).gameObject.SetActive(true);
+                _characters.transform.GetChild(previousImage).gameObject.SetActive(true);
             }
             dataIndex = 0;
             contextIndex = 0;
@@ -136,8 +124,14 @@ public class Dialogue_Manage : MonoBehaviour
                 //지금 출력중인 문장이 다 출력 되어있으면
                 else if (contextIndex >= dialogueData[dataIndex].dialogue_Context.Length - 1)
                 {
-                    
-                    dataIndex++;
+                    //시리얼 넘버가 0이 아닐 때 배경 바꾸기
+                    if (dialogueData[dataIndex].image_serialNum != 0)
+                    {
+                        Change_back(dialogueData[dataIndex].image_serialNum);
+                    }
+
+                    dataIndex++;                    
+
                     //다음 출력할 문장 있으면
                     if (dataIndex < dialogueData.Length)
                     {
@@ -148,24 +142,24 @@ public class Dialogue_Manage : MonoBehaviour
                         endTriangle.SetActive(false);
                         toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
 
-                        if (dialogueImagePanel.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
+                        if (_characters.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
                         {
                             //Debug.Log(dialogueData[dataIndex].speakerType);
-                            GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            GameObject _prevImage = _characters.transform.GetChild(previousImage).gameObject;
                             Color _prevColor = _prevImage.GetComponent<RawImage>().color;
                             _prevColor.a = 0.3f;
                             _prevImage.GetComponent<RawImage>().color = _prevColor; //여기까지 알파값 바까주고---------
                             previousImage = dialogueData[dataIndex].speakerType;
-                            dialogueImagePanel.transform.GetChild(previousImage).gameObject.SetActive(true);
+                            _characters.transform.GetChild(previousImage).gameObject.SetActive(true);
                         }
                         else
                         {
-                            GameObject _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            GameObject _prevImage = _characters.transform.GetChild(previousImage).gameObject;
                             Color _prevColor = _prevImage.GetComponent<RawImage>().color;
                             _prevColor.a = 0.3f;
                             _prevImage.GetComponent<RawImage>().color = _prevColor;
                             previousImage = dialogueData[dataIndex].speakerType;
-                            _prevImage = dialogueImagePanel.transform.GetChild(previousImage).gameObject;
+                            _prevImage = _characters.transform.GetChild(previousImage).gameObject;
                             _prevColor = _prevImage.GetComponent<RawImage>().color;
                             _prevColor.a = 1.0f;
                             _prevImage.GetComponent<RawImage>().color = _prevColor;
@@ -186,7 +180,7 @@ public class Dialogue_Manage : MonoBehaviour
                         }
                         else
                         {
-                            dialoguePanel.SetActive(false);//Dialogue UI
+                            dialoguePanel.SetActive(false);//Dialogue UI 끄기
                         }
 
                         /*
@@ -252,7 +246,11 @@ public class Dialogue_Manage : MonoBehaviour
             SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
 
         }
-        
-        
+    }
+
+    //배경 변경을 시리얼넘버에 따라 실행
+    public void Change_back(int image_num)
+    {
+        _background.texture = backgrounds[image_num];
     }
 }

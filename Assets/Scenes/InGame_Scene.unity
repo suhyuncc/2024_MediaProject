@@ -686,6 +686,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23033330949179922, guid: c825a794b63c3ff4da9c26839651a40a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23370736988838942, guid: c825a794b63c3ff4da9c26839651a40a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23443549265334864, guid: c825a794b63c3ff4da9c26839651a40a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23549508784443386, guid: c825a794b63c3ff4da9c26839651a40a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23809441422000834, guid: c825a794b63c3ff4da9c26839651a40a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -998,6 +1018,78 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115854353}
+  m_CullTransparentMesh: 1
+--- !u!1 &129961553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 129961554}
+  - component: {fileID: 129961556}
+  - component: {fileID: 129961555}
+  m_Layer: 5
+  m_Name: Dice_Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &129961554
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129961553}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1687433072}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &129961555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129961553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: a09d512464b270341b64d458d7b559ef, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &129961556
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129961553}
   m_CullTransparentMesh: 1
 --- !u!1 &131057963
 GameObject:
@@ -1707,7 +1799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 458247712}
   m_Layer: 5
-  m_Name: TXT
+  m_Name: Dialogue_Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4427,6 +4519,7 @@ MonoBehaviour:
   _canvas: {fileID: 1687433071}
   _mainCam: {fileID: 837376841}
   _diceCam: {fileID: 456106195}
+  _dicePanel: {fileID: 129961553}
   DM: {fileID: 1978280328}
   _sanText: {fileID: 115854355}
 --- !u!4 &1515561522
@@ -4755,6 +4848,7 @@ RectTransform:
   - {fileID: 529240413}
   - {fileID: 969306399}
   - {fileID: 1854721866}
+  - {fileID: 129961554}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5251,7 +5345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: f2495b09544f81c48bd714d052a5713a, type: 3}
+  m_Texture: {fileID: 2800000, guid: c2e6c6ad2be1aa04bacaf15da1e1bdd9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -5660,16 +5754,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventName: 
-  contextText: {fileID: 1968154421}
-  endTriangle: {fileID: 39018992}
-  isDialogue: 0
   dialogueData: []
-  dialoguePanel: {fileID: 458247711}
-  dialogueImagePanel: {fileID: 2138241798}
-  SelectBoxes: {fileID: 2127915755}
   isPrevDialogue: 0
-  isStageNumber: 0
-  background: {fileID: 1809154173}
+  isDialogue: 0
+  endTriangle: {fileID: 39018992}
+  dialoguePanel: {fileID: 458247711}
+  _characters: {fileID: 2138241798}
+  SelectBoxes: {fileID: 2127915755}
+  contextText: {fileID: 1968154421}
+  _background: {fileID: 1809154175}
+  backgrounds:
+  - {fileID: 2800000, guid: c2e6c6ad2be1aa04bacaf15da1e1bdd9, type: 3}
+  - {fileID: 2800000, guid: f2495b09544f81c48bd714d052a5713a, type: 3}
+  - {fileID: 2800000, guid: 8248403ef1e108341a7760b82104eca4, type: 3}
+  - {fileID: 2800000, guid: f16b35aa43b0c2d418c33cdb60f248db, type: 3}
 --- !u!114 &1978280329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5682,7 +5780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e52a83105d97a1e4aa2668a009c55492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: 975dd60786d0c8845bba1dd389b581dd, type: 3}
+  csvFile: {fileID: 4900000, guid: c22db361c3aadf54ba52095d63fa45aa, type: 3}
 --- !u!4 &1978280330
 Transform:
   m_ObjectHideFlags: 0

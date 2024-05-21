@@ -47,6 +47,16 @@ public class CSVParsingD : MonoBehaviour
                 DialogueData dialogueData;
                 
                 dialogueData.speakerType = Int32.Parse(data[1]);
+
+                // 공백이라면
+                if (data[7].Trim().Equals(""))
+                {
+                    dialogueData.image_serialNum = 0; // 0을 할당(0은 검은 화면)
+                }
+                else
+                {
+                    dialogueData.image_serialNum = Int32.Parse(data[7].Trim()); // 아니라면 CSV에 있는 값을 할당
+                }
                 
                 do
                 {

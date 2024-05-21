@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private Camera _mainCam;
     [SerializeField]
     private Camera _diceCam;
+    [SerializeField]
+    private GameObject _dicePanel;
 
     [SerializeField]
     private Dialogue_Manage DM;
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
         {
             _mainCam.gameObject.SetActive(false);
             _diceCam.gameObject.SetActive(true);
+            _dicePanel.SetActive(true);
             _CurrentCam = _diceCam;
             _canvas.worldCamera = _CurrentCam;
         }
@@ -54,6 +57,7 @@ public class GameManager : MonoBehaviour
         {
             _mainCam.gameObject.SetActive(true);
             _diceCam.gameObject.SetActive(false);
+            _dicePanel.SetActive(false);
             _CurrentCam = _mainCam;
             _canvas.worldCamera = _CurrentCam;
         }

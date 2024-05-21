@@ -11,6 +11,7 @@ public class Die_print : MonoBehaviour
 
     public Text R_txt;
 
+    public int resultCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,8 @@ public class Die_print : MonoBehaviour
 
         int resultValue = 0;
 
+        
+
         for (int i = 0; i < dies.Length; i++)
         {
             IRollResult result = dies[i].GetRollResult();
@@ -39,8 +42,32 @@ public class Die_print : MonoBehaviour
             resultValue +=
                 (!dies[i].isRolling) ? int.Parse(result.valuesAsString) : int.Parse("0");
         }
-        
 
-        R_txt.text = string.Format("결과 = {0}", resultValue);
+        for (int i = 0; i < dies.Length; i++)
+        {
+            if (!dies[i].isRolling)
+            {
+                resultCount++;
+            }
+            else
+            {
+                resultCount = 0;
+            }
+
+            
+        }
+
+        if (resultCount == dies.Length)
+        {
+            R_txt.text = string.Format("결과 = {0}", resultValue);
+            resultCount = 0;
+        }
+        else
+        {
+
+            R_txt.text = string.Format("결과 = ??");
+            resultCount = 0;
+        }
+
     }
 }
