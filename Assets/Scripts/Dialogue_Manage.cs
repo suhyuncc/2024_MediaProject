@@ -22,6 +22,24 @@ public class Dialogue_Manage : MonoBehaviour
     private GameObject endTriangle; //끝나면 깜빡거리는 삼각형
     [SerializeField]
     private GameObject dialoguePanel; //대화panel
+    /// <summary>
+    /// <para>
+    /// 0번: BarMaster
+    /// 1번: BarVisitor
+    /// </para>
+    /// <para>
+    /// 2번: HotelEmployee
+    /// 3번: PoolVisitor
+    /// </para>
+    /// <para>
+    /// 4번: HotelOwner
+    /// 5번: NPC1
+    /// </para>
+    /// <para>
+    /// 6번: StoreMaster
+    /// 7번: SweetroomVisitor
+    /// </para>
+    /// </summary>
     [SerializeField]
     private GameObject _characters; //Image들이 저장되어있는 패널
     [SerializeField]
