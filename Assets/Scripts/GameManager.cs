@@ -1,3 +1,4 @@
+using InnerDriveStudios.DiceCreator;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private Player_stat P_stat;
+
+    [SerializeField]
+    private GameObject[] _dices; //주사위들
 
     [SerializeField]
     private Canvas _canvas;
@@ -29,6 +33,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _CurrentCam = _mainCam;
+
+        //주사위 오브젝트 숨기기
+        for(int i = 0; i < _dices.Length; i++)
+        {
+            _dices[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame

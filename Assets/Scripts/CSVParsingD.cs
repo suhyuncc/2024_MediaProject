@@ -5,6 +5,8 @@ using UnityEngine;
 //gh
 public class CSVParsingD : MonoBehaviour
 {
+    public static CSVParsingD instance;
+
     [SerializeField]
     private TextAsset csvFile = null;
     private static Dictionary<string, DialogueData[]> dialogueDict = new Dictionary<string, DialogueData[]>();
@@ -15,9 +17,13 @@ public class CSVParsingD : MonoBehaviour
         return dialogueDict[eventName];
     }
 
-    public void Setcsv()
+    public void Setcsv(TextAsset newFile)
     {
-        return;
+        // 파싱을 진행해야할 파일 교체
+        csvFile = newFile;
+        dialogueDict = new Dictionary<string, DialogueData[]>();
+        // 파싱 진행
+        SetDict();
     }
 
     public void SetDict()
@@ -91,6 +97,8 @@ public class CSVParsingD : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+
         Debug.Log(Application.dataPath);
         Debug.Log(Application.persistentDataPath);
         if (isFirstOn == true)
