@@ -6,12 +6,13 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Core Objects")]
     [SerializeField]
     private Player_stat P_stat;
-
     [SerializeField]
     private GameObject[] _dices; //주사위들
 
+    [Header("UI")]
     [SerializeField]
     private Canvas _canvas;
     [SerializeField]
@@ -20,12 +21,8 @@ public class GameManager : MonoBehaviour
     private Camera _diceCam;
     [SerializeField]
     private GameObject _dicePanel;
-
     [SerializeField]
-    private Dialogue_Manage DM;
-
-    [SerializeField]
-    private Text _sanText;
+    private GameObject[] _buttons;
 
     private Camera _CurrentCam;//현재 카메라
 
@@ -44,12 +41,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _sanText.text = $"{P_stat.C_san} / {P_stat.Max_san}";
+        if (Input.anyKeyDown)
+        {
+            Button_off();
+        }
+        Background_change();
     }
 
     public void Dice_On()
     {
         Cam_switch(_CurrentCam);
+        Dice_setting("1d6");
     }
 
     private void Cam_switch(Camera cam)
@@ -76,6 +78,121 @@ public class GameManager : MonoBehaviour
 
     public void GetTXT()
     {
-        DM.GetEventName("Example");
+        Dialogue_Manage.Instance.GetEventName("Example");
+    }
+
+    private void Background_change()
+    {
+        
+
+        //이 아래는 추후 switch로 재작성
+        //RedRoom
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _buttons[0].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(4);
+        }
+        //Cafe
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _buttons[1].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(6);
+        }
+        //RedSwim
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            _buttons[2].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(7);
+        }
+        //Dark_Robby
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            _buttons[3].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(8);
+        }
+        //B2
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            _buttons[4].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(9);
+        }
+        //Light_Robby
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            _buttons[5].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(1);
+        }
+        //Casino
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            _buttons[6].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(12);
+        }
+        //Party
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            _buttons[7].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(13);
+        }
+        //Store
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            _buttons[8].SetActive(true);
+            Dialogue_Manage.Instance.Change_back(14);
+        }
+    }
+
+    //켜저있는 버튼 끄기
+    private void Button_off()
+    {
+        for(int i = 0; i < _buttons.Length; i++)
+        {
+            if (_buttons[i].activeSelf)
+            {
+                _buttons[i].SetActive(false);
+            }
+        }
+    }
+
+    //켜저있는 주사위 끄기
+    private void Dice_off()
+    {
+        for (int i = 0; i < _dices.Length; i++)
+        {
+            if (_dices[i].activeSelf)
+            {
+                _dices[i].SetActive(false);
+            }
+        }
+    }
+
+    public void Dice_setting(string dice)
+    {
+        Dice_off();
+
+        switch (dice)
+        {
+            case "1d4":
+                _dices[0].SetActive(true);
+                break;
+
+            case "1d6":
+                _dices[1].SetActive(true);
+                break;
+
+            case "2d6":
+                _dices[1].SetActive(true);
+                _dices[2].SetActive(true);
+                break;
+            case "3d6":
+                _dices[1].SetActive(true);
+                _dices[2].SetActive(true);
+                _dices[3].SetActive(true);
+                break;
+            case "1d100":
+                _dices[4].SetActive(true);
+                _dices[5].SetActive(true);
+                break;
+        }
     }
 }
