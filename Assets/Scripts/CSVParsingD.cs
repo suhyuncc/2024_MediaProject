@@ -21,6 +21,7 @@ public class CSVParsingD : MonoBehaviour
     {
         // 파싱을 진행해야할 파일 교체
         csvFile = newFile;
+        // 딕셔너리 리셋
         dialogueDict = new Dictionary<string, DialogueData[]>();
         // 파싱 진행
         SetDict();
@@ -49,6 +50,12 @@ public class CSVParsingD : MonoBehaviour
                 List<string> select_context_List = new List<string>();
                 List<string> selectList = new List<string>();
                 List<string> Next_event_List = new List<string>();
+                List<string> is_dice_List = new List<string>();
+                List<string> Dice_Context_List = new List<string>();
+                List<string> Dice_name_List = new List<string>();
+                List<string> Dice_stat_List = new List<string>();
+                List<string> Dice_Next_event_List = new List<string>();
+                List<string> is_reset_List = new List<string>();
 
                 DialogueData dialogueData;
                 
@@ -63,15 +70,31 @@ public class CSVParsingD : MonoBehaviour
                 {
                     dialogueData.image_serialNum = Int32.Parse(data[7].Trim()); // 아니라면 CSV에 있는 값을 할당
                 }
-                
+
                 do
                 {
                     data[3] = data[3].Replace("@", ","); // @를 ,로 변환(CSV파일 규칙) - CSV파일의 "대사"열
-                    data[5] = data[5].Replace("@", ","); // @를 ,로 변환(CSV파일 규칙) - CSV파일의 "선택지 대사"열
                     contextList.Add(data[3].ToString());
-                    selectList.Add(data[4].ToString());
+
+                    selectList.Add(data[4].ToString()); // CSV파일의 "선택지가 있는가?"열
+
+                    data[5] = data[5].Replace("@", ","); // @를 ,로 변환(CSV파일 규칙) - CSV파일의 "선택지 대사"열
                     select_context_List.Add(data[5].ToString());
-                    Next_event_List.Add(data[6].Trim().ToString());
+
+                    Next_event_List.Add(data[6].Trim().ToString()); // CSV파일의 "선택후 대사"열
+
+                    is_dice_List.Add(data[8].Trim().ToString()); // CSV파일의 "주사위를 굴리는가?"열
+
+                    Dice_Context_List.Add(data[9].Trim().ToString()); // CSV파일의 "주사위 대사"열
+
+                    Dice_name_List.Add(data[10].Trim().ToString()); // CSV파일의 "주사위 종류"열
+
+                    Dice_stat_List.Add(data[11].Trim().ToString()); // CSV파일의 "대상 스탯"열
+
+                    Dice_Next_event_List.Add(data[12].Trim().ToString()); // CSV파일의 "이벤트 후 대사"열
+
+                    is_reset_List.Add(data[13].Trim().ToString()); // CSV파일의 "어떤 리셋인가?"열 ( 1: deadend / 2: hard reset)
+
                     if (++i < row.Length)
                     {
                         data = row[i].Split(new char[] { ',' });
@@ -83,15 +106,20 @@ public class CSVParsingD : MonoBehaviour
                 dialogueData.is_select = selectList.ToArray();
                 dialogueData.Secletion_Context = select_context_List.ToArray();
                 dialogueData.Next_event = Next_event_List.ToArray(); // - CSV파일의 "선택후 대사"열
+                dialogueData.is_dice = is_dice_List.ToArray();
+                dialogueData.Dice_Context = Dice_Context_List.ToArray();
+                dialogueData.Dice_name = Dice_name_List.ToArray();
+                dialogueData.Dice_stat = Dice_stat_List.ToArray();
+                dialogueData.Dice_Next_event = Dice_Next_event_List.ToArray();
+                dialogueData.is_reset = is_reset_List.ToArray();
+
                 dataList.Add(dialogueData);
-                
-                
             }
             dialogueDict.Add(eventName, dataList.ToArray());
         }
         foreach(KeyValuePair<string, DialogueData[]> j in dialogueDict)
         {
-            Debug.Log(j.Key);
+            //Debug.Log(j.Key);
         }
     }
 

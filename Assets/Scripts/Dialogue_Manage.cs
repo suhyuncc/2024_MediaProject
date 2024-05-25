@@ -12,8 +12,6 @@ public class Dialogue_Manage : MonoBehaviour
 
     public string eventName; // eventName 수령 받을 곳
     public DialogueData[] dialogueData; //대화 데이터
-    [SerializeField]
-    private bool isPrevDialogue = false;
     public bool isDialogue = false; // recieve event
     private bool currentDialogue = false; // is current dialogue working
 
@@ -41,9 +39,15 @@ public class Dialogue_Manage : MonoBehaviour
     /// </para>
     /// </summary>
     [SerializeField]
-    private GameObject _characters; //Image들이 저장되어있는 패널
+    private GameObject _characters; //캐릭터 Image들이 저장되어있는 패널
     [SerializeField]
-    private GameObject SelectBoxes; //Image들이 저장되어있는 패널
+    private GameObject SelectBoxes; //선택지 박스들
+    [SerializeField]
+    private GameObject CheckBoxes; //주사위 이벤트시 선택지 박스들
+    [SerializeField]
+    private GameObject _softReset; //deadend 버튼
+    [SerializeField]
+    private GameObject _hardReset; //처음부터 시작 버튼
     [SerializeField]
     private Text contextText; //대화
 
@@ -53,20 +57,10 @@ public class Dialogue_Manage : MonoBehaviour
     [SerializeField]
     private Texture[] backgrounds;
 
-    
-    
-
-
     private void Awake()
     {
         Instance = this;
     }
-
-    public void ItIsPreviousDialogue(int num)
-    {
-        isPrevDialogue= true;
-    }
-
 
     public void GetEventName(string _eventName) //eventName 수령받는 함수
     {
@@ -106,11 +100,12 @@ public class Dialogue_Manage : MonoBehaviour
             dialogueData = CSVParsingD.GetDialogue(eventName); // 화자 타입, 화자 이름, 대사를 원하는 이벤트에 있는 내용을 가져옴
             endTriangle.SetActive(false);
             //nameText.text = dialogueData[0].name;
-            if (_characters.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false)
+            previousImage = dialogueData[0].speakerType;    // 케릭터 시리얼 번호
+            if (_characters.transform.GetChild(dialogueData[0].speakerType).gameObject.activeSelf == false &&
+                previousImage != 0)
             {
-                //Debug.Log(dialogueData[0].speakerType);
-                previousImage = dialogueData[0].speakerType;
-                _characters.transform.GetChild(previousImage).gameObject.SetActive(true);
+                
+                _characters.transform.GetChild(previousImage - 1).gameObject.SetActive(true);
             }
             dataIndex = 0;
             contextIndex = 0;
@@ -160,28 +155,36 @@ public class Dialogue_Manage : MonoBehaviour
                         endTriangle.SetActive(false);
                         toType = dialogueData[dataIndex].dialogue_Context[contextIndex];
 
-                        if (_characters.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
+                        if(dialogueData[dataIndex].speakerType != 0)
                         {
-                            //Debug.Log(dialogueData[dataIndex].speakerType);
-                            GameObject _prevImage = _characters.transform.GetChild(previousImage).gameObject;
-                            Color _prevColor = _prevImage.GetComponent<RawImage>().color;
-                            _prevColor.a = 0.3f;
-                            _prevImage.GetComponent<RawImage>().color = _prevColor; //여기까지 알파값 바까주고---------
-                            previousImage = dialogueData[dataIndex].speakerType;
-                            _characters.transform.GetChild(previousImage).gameObject.SetActive(true);
+                            if (_characters.transform.GetChild(dialogueData[dataIndex].speakerType).gameObject.activeSelf == false)
+                            {
+                                /*
+                                //Debug.Log(dialogueData[dataIndex].speakerType);
+                                GameObject _prevImage = _characters.transform.GetChild(previousImage - 1).gameObject;
+                                Color _prevColor = _prevImage.GetComponent<RawImage>().color;
+                                _prevColor.a = 0.3f;
+                                _prevImage.GetComponent<RawImage>().color = _prevColor; //여기까지 알파값 바까주고---------*/
+                                previousImage = dialogueData[dataIndex].speakerType;
+                                _characters.transform.GetChild(previousImage - 1).gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                /*
+                                GameObject _prevImage = _characters.transform.GetChild(previousImage - 1).gameObject;
+                                Color _prevColor = _prevImage.GetComponent<RawImage>().color;
+                                _prevColor.a = 0.3f;
+                                _prevImage.GetComponent<RawImage>().color = _prevColor;
+                                */
+                                previousImage = dialogueData[dataIndex].speakerType;
+                                GameObject _prevImage = _characters.transform.GetChild(previousImage - 1).gameObject;
+                                Color _prevColor = _prevImage.GetComponent<RawImage>().color;
+                                _prevColor.a = 1.0f;
+                                _prevImage.GetComponent<RawImage>().color = _prevColor;
+                            }
                         }
-                        else
-                        {
-                            GameObject _prevImage = _characters.transform.GetChild(previousImage).gameObject;
-                            Color _prevColor = _prevImage.GetComponent<RawImage>().color;
-                            _prevColor.a = 0.3f;
-                            _prevImage.GetComponent<RawImage>().color = _prevColor;
-                            previousImage = dialogueData[dataIndex].speakerType;
-                            _prevImage = _characters.transform.GetChild(previousImage).gameObject;
-                            _prevColor = _prevImage.GetComponent<RawImage>().color;
-                            _prevColor.a = 1.0f;
-                            _prevImage.GetComponent<RawImage>().color = _prevColor;
-                        }
+                        
+
 
                         StartCoroutine(typingText); ;
                     }
@@ -196,32 +199,27 @@ public class Dialogue_Manage : MonoBehaviour
                             //선택지 보여주기
                             selectbox();
                         }
+                        else if (dialogueData[dataIndex - 1].is_dice[contextIndex] == "1")
+                        {
+                            contextIndex = 0;
+                            //주사위 선택지 보여주기
+                            checkbox();
+                        }
+                        else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "1")
+                        {
+                            // deadend를 위한 버튼
+                            _softReset.SetActive(true);
+                        }
+                        else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "2")
+                        {
+                            // hardreset을 위한 버튼
+                            _hardReset.SetActive(true);
+                        }
                         else
                         {
                             dialoguePanel.SetActive(false);//Dialogue UI 끄기
                         }
 
-                        /*
-                        if (isBothDialoguein1Time)
-                        {
-                            isBothDialoguein1Time = false;
-                            GetEventName(eventNameIf2Event);
-
-                        }
-                        else if (!isPrevDialogue)
-                        {
-                            //gm.GetComponent<GameManager>().currentState = state.idle;
-                            //gm.GetComponent<GameManager>().MapManager.GetComponent<MapManagement>().ReturnScene();
-                            //dialoguePanel.SetActive(false);//Dialogue UI
-                        }
-                        else
-                        {
-                            if (isBothDialogue)
-                            {
-                                //gm.GetComponent<GameManager>().SetEventName(eventNameIf2Event);
-                            }
-                            //gm.GetComponent<GameManager>().StartBattle(isStageNumber); //StartBattle!
-                        }*/
                     }
                 }
             }
@@ -262,6 +260,31 @@ public class Dialogue_Manage : MonoBehaviour
 
             //다음 대사 알려주고
             SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
+
+        }
+    }
+
+    private void checkbox()
+    {
+        dialogueData = CSVParsingD.GetDialogue("check");
+
+        for (int i = 0; i < dialogueData[0].Dice_Context.Length; i++)
+        {
+            //박스키고
+            CheckBoxes.transform.GetChild(i).gameObject.SetActive(true);
+
+            //글자 박고
+            CheckBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                = dialogueData[0].Dice_Context[i];
+
+            //던질 주사위 대사 알려주고
+            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetDiceName(dialogueData[0].Dice_name[i]);
+
+            //대상 스탯 알려주고
+            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetCheckStat(dialogueData[0].Dice_stat[i]);
+
+            //주사위를 던진 후 대사 알려주고
+            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetEventName(dialogueData[0].Dice_Next_event[i]);
 
         }
     }

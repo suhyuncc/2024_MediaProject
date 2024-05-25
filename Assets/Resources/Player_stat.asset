@@ -16,5 +16,5 @@ MonoBehaviour:
   P_str: 0
   P_dex: 0
   P_luk: 0
-  Max_san: 0
-  C_san: 0
+  Max_san: 20
+  C_san: 20
