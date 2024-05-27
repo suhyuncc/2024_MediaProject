@@ -71,6 +71,26 @@ public class CSVParsingD : MonoBehaviour
                     dialogueData.image_serialNum = Int32.Parse(data[7].Trim()); // 아니라면 CSV에 있는 값을 할당
                 }
 
+                // 공백이라면
+                if (data[14].Trim().Equals(""))
+                {
+                    dialogueData.item_serialNum = 0; // 0을 할당
+                }
+                else
+                {
+                    dialogueData.item_serialNum = Int32.Parse(data[14].Trim()); // 아니라면 CSV에 있는 값을 할당
+                }
+
+                // 공백이라면
+                if (data[15].Trim().Equals(""))
+                {
+                    dialogueData.stage_serialNum = 0; // 0을 할당
+                }
+                else
+                {
+                    dialogueData.stage_serialNum = Int32.Parse(data[15].Trim()); // 아니라면 CSV에 있는 값을 할당
+                }
+
                 do
                 {
                     data[3] = data[3].Replace("@", ","); // @를 ,로 변환(CSV파일 규칙) - CSV파일의 "대사"열
@@ -119,7 +139,7 @@ public class CSVParsingD : MonoBehaviour
         }
         foreach(KeyValuePair<string, DialogueData[]> j in dialogueDict)
         {
-            //Debug.Log(j.Key);
+            Debug.Log(j.Key);
         }
     }
 

@@ -9,7 +9,7 @@ public class Menual_Drag : MonoBehaviour
     [SerializeField]
     private bool is_On;
 
-    private Vector3 start_pos = new Vector3(-1440.0f, 0f, 0f);
+    private Vector3 start_pos = new Vector3(-1400.0f, 0f, 0f);
     private Vector3 arrive_pos = new Vector3(-420.0f, 0f, 0f);
     private Vector3 relative_pos = new Vector3(0f,0f,0f);
 

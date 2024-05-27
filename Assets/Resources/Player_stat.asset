@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe399bd557e479c4aa2e20dda96812a0, type: 3}
   m_Name: Player_stat
   m_EditorClassIdentifier: 
-  P_int: 0
-  P_str: 0
-  P_dex: 0
-  P_luk: 0
-  Max_san: 20
-  C_san: 20
+  P_int: 45
+  P_str: 65
+  P_dex: 80
+  P_luk: 40
+  Max_san: 50
+  C_san: 49
+  Item_list: 02000000000000000000000000000000000000000000000000000000
+  C_Item_Index: 1
+  Coin_num: 222

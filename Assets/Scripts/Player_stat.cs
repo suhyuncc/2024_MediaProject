@@ -11,4 +11,7 @@ public class Player_stat : ScriptableObject
     public int P_luk;      // 플레이어 행운
     public int Max_san;     // 최대 san수치
     public int C_san;       // 현재 san수치
+    public int[] Item_list = new int[] { 0, 0, 0, 0, 0, 0, 0}; // 아이템 리스트
+    public int C_Item_Index = 0; //아이템 리스트의 현재 인덱스
+    public int Coin_num = 0; //카지노 코인 개수
 }

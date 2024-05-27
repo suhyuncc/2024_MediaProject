@@ -14,6 +14,7 @@ public class Dialogue_Manage : MonoBehaviour
     public DialogueData[] dialogueData; //대화 데이터
     public bool isDialogue = false; // recieve event
     private bool currentDialogue = false; // is current dialogue working
+    
 
     [Header("UI")]
     [SerializeField]
@@ -48,6 +49,8 @@ public class Dialogue_Manage : MonoBehaviour
     private GameObject _softReset; //deadend 버튼
     [SerializeField]
     private GameObject _hardReset; //처음부터 시작 버튼
+    [SerializeField]
+    private GameObject _ending; //처음부터 시작 버튼
     [SerializeField]
     private Text contextText; //대화
 
@@ -193,17 +196,35 @@ public class Dialogue_Manage : MonoBehaviour
                     {
                         currentDialogue = false;
 
+                        if(dialogueData[dataIndex - 1].item_serialNum != 0)
+                        {
+                            //아이템 리스트에 아이템 추가
+                            GameManager.Instance.Add_Item(dialogueData[dataIndex - 1].item_serialNum - 1);
+                        }
+
                         if (dialogueData[dataIndex - 1].is_select[contextIndex] == "1")
                         {
                             contextIndex = 0;
                             //선택지 보여주기
                             selectbox();
                         }
+                        else if (dialogueData[dataIndex - 1].is_select[contextIndex] == "2")
+                        {
+                            contextIndex = 0;
+                            //2번째 선택지 창 열기
+                            selectbox2();
+                        }
                         else if (dialogueData[dataIndex - 1].is_dice[contextIndex] == "1")
                         {
                             contextIndex = 0;
                             //주사위 선택지 보여주기
                             checkbox();
+                        }
+                        else if (dialogueData[dataIndex - 1].is_dice[contextIndex] == "2")
+                        {
+                            contextIndex = 0;
+                            //2번쨰 주사위 던지기 주사위 선택지 보여주기
+                            checkbox2();
                         }
                         else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "1")
                         {
@@ -215,11 +236,40 @@ public class Dialogue_Manage : MonoBehaviour
                             // hardreset을 위한 버튼
                             _hardReset.SetActive(true);
                         }
+                        else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "3")
+                        {
+                            // 일반 엔딩을 위한 버튼
+                            _ending.SetActive(true);
+                        }
+                        //세이렌 이벤트
+                        //다음 화면 전환이 예정되어있다면 세이렌 무시
+                        else if (GameManager.Instance.Siren_On && dialogueData[dataIndex - 1].stage_serialNum == 0)
+                        {
+                            GameManager.Instance.Siren_event();
+                            GameManager.Instance.Siren_On = false;
+                        }
+                        //축사 이벤트
+                        else if (GameManager.Instance.Owner_count == 3)
+                        {
+                            GameManager.Instance.Owner_Event();
+                            GameManager.Instance.Owner_count = 0;
+                        }
                         else
                         {
-                            dialoguePanel.SetActive(false);//Dialogue UI 끄기
+                            //스테이지 변경
+                            if (dialogueData[dataIndex - 1].stage_serialNum != 0)
+                            {
+                                GameManager.Instance.Stage_start(dialogueData[dataIndex - 1].stage_serialNum);
+                                //dialoguePanel.SetActive(false);//Dialogue UI 끄기
+                            }
+                            else
+                            {
+                                dialoguePanel.SetActive(false);//Dialogue UI 끄기
+                            }
+                            
                         }
 
+                        
                     }
                 }
             }
@@ -264,34 +314,89 @@ public class Dialogue_Manage : MonoBehaviour
         }
     }
 
+    private void selectbox2()
+    {
+        dialogueData = CSVParsingD.GetDialogue("select2");
+
+        for (int i = 0; i < dialogueData[0].Secletion_Context.Length; i++)
+        {
+            //박스키고
+            SelectBoxes.transform.GetChild(i).gameObject.SetActive(true);
+
+            //글자 박고
+            SelectBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                = dialogueData[0].Secletion_Context[i];
+
+            //다음 대사 알려주고
+            SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
+
+        }
+    }
+
     private void checkbox()
     {
         dialogueData = CSVParsingD.GetDialogue("check");
 
         for (int i = 0; i < dialogueData[0].Dice_Context.Length; i++)
         {
-            //박스키고
-            CheckBoxes.transform.GetChild(i).gameObject.SetActive(true);
+            if (dialogueData[0].Dice_Context[i] != "")
+            {
+                //박스키고
+                CheckBoxes.transform.GetChild(i).gameObject.SetActive(true);
 
-            //글자 박고
-            CheckBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
-                = dialogueData[0].Dice_Context[i];
+                //글자 박고
+                CheckBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                    = dialogueData[0].Dice_Context[i];
 
-            //던질 주사위 대사 알려주고
-            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetDiceName(dialogueData[0].Dice_name[i]);
+                //던질 주사위 대사 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetDiceName(dialogueData[0].Dice_name[i]);
 
-            //대상 스탯 알려주고
-            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetCheckStat(dialogueData[0].Dice_stat[i]);
+                //대상 스탯 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetCheckStat(dialogueData[0].Dice_stat[i]);
 
-            //주사위를 던진 후 대사 알려주고
-            CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetEventName(dialogueData[0].Dice_Next_event[i]);
-
+                //주사위를 던진 후 대사 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetEventName(dialogueData[0].Dice_Next_event);
+            }
         }
+        
+    }
+
+    private void checkbox2()
+    {
+        dialogueData = CSVParsingD.GetDialogue("check2");
+
+        for (int i = 0; i < dialogueData[0].Dice_Context.Length; i++)
+        {
+            if (dialogueData[0].Dice_Context[i] != "")
+            {
+                //박스키고
+                CheckBoxes.transform.GetChild(i).gameObject.SetActive(true);
+
+                //글자 박고
+                CheckBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                    = dialogueData[0].Dice_Context[i];
+
+                //던질 주사위 대사 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetDiceName(dialogueData[0].Dice_name[i]);
+
+                //대상 스탯 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetCheckStat(dialogueData[0].Dice_stat[i]);
+
+                //주사위를 던진 후 대사 알려주고
+                CheckBoxes.transform.GetChild(i).GetComponent<CheckBox>().SetEventName(dialogueData[0].Dice_Next_event);
+            }
+        }
+
     }
 
     //배경 변경을 시리얼넘버에 따라 실행
     public void Change_back(int image_num)
     {
         _background.texture = backgrounds[image_num];
+    }
+
+    public void Dialouge_off()
+    {
+        dialoguePanel.gameObject.SetActive(false);
     }
 }

@@ -11,7 +11,7 @@ public class CheckBox : MonoBehaviour
     [SerializeField]
     private string _diceName; // 주사위 종류
     [SerializeField]
-    private string _next_Event; // 다음 대사
+    private string[] _next_Events; // 다음 대사
 
 
     public void SetCheckStat(string checkstat)
@@ -24,9 +24,9 @@ public class CheckBox : MonoBehaviour
         _diceName = diceName;
     }
 
-    public void SetEventName(string _eventName)
+    public void SetEventName(string[] _eventName)
     {
-        _next_Event = _eventName;
+        _next_Events = _eventName;
     }
 
     
@@ -37,7 +37,7 @@ public class CheckBox : MonoBehaviour
         _dice_Panel.Set_icon(_checkStat);
 
         // 다음 대사 넘기기
-        _dice_Panel.SetEventName(_next_Event);
+        _dice_Panel.SetEventName(_next_Events);
 
         // 화면전환과 동시에 주사위 세팅
         GameManager.Instance.Dice_On(_diceName);

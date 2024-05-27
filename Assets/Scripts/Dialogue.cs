@@ -15,6 +15,8 @@ public struct DialogueData
     public string[] Dice_stat; // 대상 스탯
     public string[] Dice_Next_event; // 주사위 다음 event_name
     public string[] is_reset; // 어떤 리셋인가?
+    public int item_serialNum; // 아이템 시리얼 넘버
+    public int stage_serialNum; // 스테이지 시리얼 넘버
 }
 public class Dialogue : MonoBehaviour
 {

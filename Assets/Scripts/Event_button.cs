@@ -18,7 +18,8 @@ public class Event_button : MonoBehaviour
         }
     }
 
-    public void Play_Event()
+
+    public virtual void Play_Event()
     {
         //이벤트 다이얼로그 로드
         CSVParsingD.instance.Setcsv(_events[_eventCount]);
@@ -28,8 +29,28 @@ public class Event_button : MonoBehaviour
     }
 
     // count초기화(deadend, hardreset에 사용)
-    public void CountReset()
+    public virtual void CountReset()
     {
         _eventCount = 0;
+    }
+
+    public void Up_count(int count)
+    {
+        _eventCount += count;
+    }
+
+    public TextAsset Get_events(int count)
+    {
+        return _events[count];
+    }
+
+    public int Get_count()
+    {
+        return _eventCount;
+    }
+
+    public void Set_count(int i)
+    {
+        _eventCount = i;
     }
 }
