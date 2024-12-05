@@ -11,12 +11,12 @@ public class AudioSlider : MonoBehaviour
     private SoundInfo _soundinfo;
     [SerializeField] private AudioMixer Mixer;
     [SerializeField] private Slider BGM;
-    [SerializeField] private Slider EffectV;
+    [SerializeField] private Slider SFX;
 
     private void OnEnable()
     {
         BGM.value = _soundinfo.BGMvalue;
-        EffectV.value = _soundinfo.SFXvalue;
+        SFX.value = _soundinfo.SFXvalue;
     }
 
     public void SetBGMVolume()
@@ -36,7 +36,7 @@ public class AudioSlider : MonoBehaviour
     public void SetEffectVolume()
     {
 
-        float sound = EffectV.value;
+        float sound = SFX.value;
 
         if (sound == 0) Mixer.SetFloat("SFX", -80);
         else
@@ -45,7 +45,7 @@ public class AudioSlider : MonoBehaviour
             Mixer.SetFloat("SFX", sound);
         }
 
-        _soundinfo.SFXvalue = (int)(EffectV.value);
+        _soundinfo.SFXvalue = (int)(SFX.value);
     }
 
 }

@@ -34,6 +34,11 @@ public class Event_button : MonoBehaviour
         _eventCount = 0;
     }
 
+    public virtual void CountFull()
+    {
+        _eventCount = _events.Length;
+    }
+
     public void Up_count(int count)
     {
         _eventCount += count;

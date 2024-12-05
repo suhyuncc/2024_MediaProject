@@ -29,23 +29,21 @@ public class CSVParsingD : MonoBehaviour
 
     public void SetDict()
     {
-        string csvText = csvFile.text.Substring(0, csvFile.text.Length - 1); //get csv file as string type, except last line(empty)
-        string[] row = csvText.Split(new char[] { '\n' }); //split by enter sign
+        string csvText = csvFile.text.Substring(0, csvFile.text.Length - 1); //csv파일 전체를 string타입으로 변환
+        string[] row = csvText.Split(new char[] { '\n' }); //개행을 기준으로 행마다 분할
 
         for(int i = 1; i < row.Length; i++)
         {
-            string[] data = row[i].Split(new char[] { ',' }); //split by (,)
+            string[] data = row[i].Split(new char[] { ',' }); //(,)기준으로 데이터 분할
 
-            if (data[0].Trim() == "" || data[0].Trim() == "end")
-            {
-                continue; //no event -> continue
-            }
-
-            List<DialogueData> dataList = new List<DialogueData>();
             string eventName = data[0];
 
+            List<DialogueData> dataList = new List<DialogueData>();
+
+            //EventName별로 DialogueData 구조체 생성
             while (data[0].Trim() != "end")
             {
+                List<string> BGM_SFX_List = new List<string>();
                 List<string> contextList = new List<string>();
                 List<string> select_context_List = new List<string>();
                 List<string> selectList = new List<string>();
@@ -91,8 +89,20 @@ public class CSVParsingD : MonoBehaviour
                     dialogueData.stage_serialNum = Int32.Parse(data[15].Trim()); // 아니라면 CSV에 있는 값을 할당
                 }
 
+                // 공백이라면
+                if (data[16].Trim().Equals(""))
+                {
+                    dialogueData.sub_serialNum = 0; // 0을 할당
+                }
+                else
+                {
+                    dialogueData.sub_serialNum = Int32.Parse(data[16].Trim()); // 아니라면 CSV에 있는 값을 할당
+                }
+
                 do
                 {
+                    BGM_SFX_List.Add(data[2].ToString());
+
                     data[3] = data[3].Replace("@", ","); // @를 ,로 변환(CSV파일 규칙) - CSV파일의 "대사"열
                     contextList.Add(data[3].ToString());
 
@@ -122,7 +132,8 @@ public class CSVParsingD : MonoBehaviour
                     else break;
                 } while (i < row.Length && data[1] == "" && data[0] != "end");
 
-                dialogueData.dialogue_Context= contextList.ToArray();
+                dialogueData.BGM_SFX_Num = BGM_SFX_List.ToArray();
+                dialogueData.dialogue_Context = contextList.ToArray();
                 dialogueData.is_select = selectList.ToArray();
                 dialogueData.Secletion_Context = select_context_List.ToArray();
                 dialogueData.Next_event = Next_event_List.ToArray(); // - CSV파일의 "선택후 대사"열
@@ -135,12 +146,10 @@ public class CSVParsingD : MonoBehaviour
 
                 dataList.Add(dialogueData);
             }
+
             dialogueDict.Add(eventName, dataList.ToArray());
         }
-        foreach(KeyValuePair<string, DialogueData[]> j in dialogueDict)
-        {
-            Debug.Log(j.Key);
-        }
+
     }
 
     private void Awake()

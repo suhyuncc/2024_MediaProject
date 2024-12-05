@@ -6,7 +6,7 @@ public class Text_Panel : MonoBehaviour
 {
     [SerializeField]
     private GameObject _buttons;
-    
+
 
     private void OnEnable()
     {
@@ -21,6 +21,6 @@ public class Text_Panel : MonoBehaviour
         //현 스테이지 버튼 켜기
         //GameManager.Instance.Stage_Btn_On();
 
-        
+
     }
 }

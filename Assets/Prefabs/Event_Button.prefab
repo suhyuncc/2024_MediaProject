@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1606869152, guid: 741a9c70eaf377f45ad0eeea9b6136f2, type: 3}
+  m_Sprite: {fileID: 776828147, guid: b503e9eb147720e48a6a5c7f32ada9f1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -158,7 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df2133ff471aea54bb71833689e7d657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _filename: "Prolouge Dialouge - CSV\uD615\uC2DD \uD14C\uC2A4\uD2B8"
+  _eventCount: 0
+  _events: []
 --- !u!95 &2699885456577366571
 Animator:
   serializedVersion: 5

@@ -20,7 +20,7 @@ public class Scene : MonoBehaviour
 
     public void StartBtn()
     {
-        SceneManager.LoadScene("InGame_Scene");
+        SceneManager.LoadScene("Test_Scene");
     }
 
     public void FinBtn()

@@ -14,17 +14,23 @@ public class Dice_panel : MonoBehaviour
     [SerializeField]
     private Sprite[] _icons;
     [SerializeField]
+    private Sprite[] _resultIcons;
+    [SerializeField]
     private Image _icon;
+    [SerializeField]
+    private Image _resultIcon;
     [SerializeField]
     private GameObject _rollButton;
     [SerializeField]
     private GameObject _returnButton;
     [SerializeField]
-    private GameObject _diciButton;
-    [SerializeField]
     private string _next_Event; // 다음 대사
     [SerializeField]
     private string[] _next_Events; // 다음 대사 list
+    [SerializeField]
+    private Text _verdict;
+    [SerializeField]
+    private Text _StatTxt;
 
     public Text R_txt;
     public Text Result_show;
@@ -46,39 +52,33 @@ public class Dice_panel : MonoBehaviour
     [SerializeField]
     private Slider _batslider;
 
+    [Header("MiniMap")]
+    [SerializeField]
+    private GameObject _miniMap;
+
     private bool _diceDone;
     private int _diceResult = 0;
     private int _playerSet_count;
+    public int _cook_count = 0;
 
-    private bool _choiceOdd;
-    private bool _choiceEven;
-    private bool _resutOdd;
-    private bool _resutEven;
     private void OnEnable()
     {
         is_success = false;
         is_bigsuccess = false;
-        _choiceOdd = false;
-        _choiceEven = false;
-        _resutOdd = false;
-        _resutEven = false;
         _diceDone = false;
 
         _diceResult = 0;
 
         _returnButton.SetActive(false);
         Result_show.gameObject.SetActive(false);
+        _rollButton.SetActive(true);
 
-        if(_stat == "dici")
+        if (_stat == "poker")
         {
-            _rollButton.SetActive(false);
-            _diciButton.SetActive(true);
             _bat.SetActive(true);
         }
         else
         {
-            _rollButton.SetActive(true);
-            _diciButton.SetActive(false);
             _bat.SetActive(false);
         }
 
@@ -94,21 +94,16 @@ public class Dice_panel : MonoBehaviour
             P_stat.P_int = 0;
             P_stat.P_dex = 0;
 
-            P_stat.Max_san = 50;
+            P_stat.Max_san = 90;
             P_stat.C_san = P_stat.Max_san;
 
             for(int i = 0; i < P_stat.Item_list.Length; i++)
             {
-                P_stat.Item_list[i] = 0;
+                P_stat.Item_list[i] = -1;
             }
             P_stat.C_Item_Index = 0;
             P_stat.Coin_num = 0;
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
     }
 
     // Update is called once per frame
@@ -116,6 +111,7 @@ public class Dice_panel : MonoBehaviour
     {
         if(Player_set)
         {
+            _verdict.text = "";
             switch (_playerSet_count)
             {
                 case 1:
@@ -135,11 +131,14 @@ public class Dice_panel : MonoBehaviour
                     break;
             }
         }
-
-        if(_stat == "dici")
+        else
         {
-            _battext.text = $"{(int)(P_stat.Coin_num * _batslider.value)}";
+            //판정표 출력
+            Verdict();
         }
+
+        _battext.text = $"{(int)(P_stat.Coin_num * _batslider.value)}";
+
         Print_result();
     }
 
@@ -179,7 +178,7 @@ public class Dice_panel : MonoBehaviour
             resultCount = 0;
             if(_diceDone)
             {
-                R_txt.text = string.Format("결과 = {0}", resultValue);
+                R_txt.text = string.Format("{0}", resultValue);
                 _diceResult = resultValue;
 
                 if (Player_set)
@@ -202,12 +201,11 @@ public class Dice_panel : MonoBehaviour
             }
             else
             {
-                R_txt.text = string.Format("결과 = ??");
+                R_txt.text = string.Format("??");
             }
         }
         else
         {
-            
             resultCount = 0;
         }
 
@@ -217,30 +215,88 @@ public class Dice_panel : MonoBehaviour
     public void Set_icon(string stat)
     {
         _stat = stat;
+        _resultIcon.gameObject.SetActive(true);
 
         switch (stat)
         {
             case "san":
-            case "san_int":
                 _icon.sprite = _icons[0];
+                _resultIcon.sprite = _resultIcons[0];
+                break;
+            case "desan":
+                _icon.sprite = _icons[0];
+                _resultIcon.gameObject.SetActive(false);
                 break;
             case "str":
                 _icon.sprite = _icons[1];
+                _resultIcon.sprite = _resultIcons[1];
                 break;
+            case "poker":
             case "luk":
                 _icon.sprite = _icons[2];
+                _resultIcon.sprite = _resultIcons[2];
                 break;
             case "int":
                 _icon.sprite = _icons[3];
+                _resultIcon.sprite = _resultIcons[3];
                 break;
             case "dex":
                 _icon.sprite = _icons[4];
-                break;
-            case "dici":
-                _icon.sprite = _icons[0];
-                _diciButton.SetActive(true);
+                _resultIcon.sprite = _resultIcons[4];
                 break;
         }
+    }
+
+    private void Verdict()
+    {
+        switch (_stat)
+        {
+            case "san":
+                _verdict.text = $"대성공 <= {P_stat.C_san / 4} \n" +
+                    $"성공 <= {P_stat.C_san} \n" +
+                    $"실패 > {P_stat.C_san} \n" +
+                    $"대실패 = 98, 99, 100";
+                _StatTxt.text = $"{P_stat.C_san}";
+                break;
+
+            case "str":
+                _verdict.text = $"대성공 <= {P_stat.P_str / 4} \n" +
+                    $"성공 <= {P_stat.P_str} \n" +
+                    $"실패 > {P_stat.P_str} \n" +
+                    $"대실패 = 98, 99, 100";
+                _StatTxt.text = $"{P_stat.P_str}";
+                break;
+
+            case "poker":
+            case "luk":
+                _verdict.text = $"대성공 <= {P_stat.P_luk / 4} \n" +
+                    $"성공 <= {P_stat.P_luk} \n" +
+                    $"실패 > {P_stat.P_luk} \n" +
+                    $"대실패 = 98, 99, 100";
+                _StatTxt.text = $"{P_stat.P_luk}";
+                break;
+
+            case "int":
+                _verdict.text = $"대성공 <= {P_stat.P_int / 4} \n" +
+                    $"성공 <= {P_stat.P_int} \n" +
+                    $"실패 > {P_stat.P_int} \n" +
+                    $"대실패 = 98, 99, 100";
+                _StatTxt.text = $"{P_stat.P_int}";
+                break;
+
+            case "dex":
+                _verdict.text = $"대성공 <= {P_stat.P_dex / 4} \n" +
+                    $"성공 <= {P_stat.P_dex} \n" +
+                    $"실패 > {P_stat.P_dex} \n" +
+                    $"대실패 = 98, 99, 100";
+                _StatTxt.text = $"{P_stat.P_dex}";
+                break;
+
+            case "desan":
+                _verdict.text = "";
+                break;
+        }
+        
     }
 
     public void SetEventName(string[] _eventName)
@@ -273,37 +329,39 @@ public class Dice_panel : MonoBehaviour
             Title.gameObject.SetActive(false);
             Player_set = false;
             _playerSet_count = 0;
-            GameManager.Instance.Stage_start(0);
+            //미니맵 UI켜기
+            _miniMap.SetActive(true);
+            //다음 대사 실행
+            Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
         }
         else
         {
             //계산
             switch (_stat)
             {
-                case "san":
+                case "desan":
                     P_stat.C_san -= _diceResult;
                     //다음 대사 실행
                     Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
                     break;
-                case "san_int":
-                    P_stat.C_san -= _diceResult;
-                    P_stat.P_int -= _diceResult;
-                    //다음 대사 실행
-                    Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
-                    break;
-                case "str":
-                case "luk":
-                case "int":
-                case "dex":
-                    //대성공(d2)
+
+                case "poker":
+                    //판돈은 잃고
+                    P_stat.Coin_num -= Int32.Parse(_battext.text);
+
+                    //대성공(d1)
                     if (is_bigsuccess)
                     {
-                        Dialogue_Manage.Instance.GetEventName(_next_Events[1].ToString());
-                    }
-                    //성공(d1)
-                    else if(is_success)
-                    {
+                        //4배
+                        P_stat.Coin_num += 4 * Int32.Parse(_battext.text);
                         Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
+                    }
+                    //성공(d2)
+                    else if (is_success)
+                    {
+                        //2배
+                        P_stat.Coin_num += 2 * Int32.Parse(_battext.text);
+                        Dialogue_Manage.Instance.GetEventName(_next_Events[1].ToString());
                     }
                     //실패(d3)
                     else
@@ -311,37 +369,69 @@ public class Dice_panel : MonoBehaviour
                         Dialogue_Manage.Instance.GetEventName(_next_Events[2].ToString());
                     }
                     break;
-                case "dici":
-                    //판돈은 잃고
-                    P_stat.Coin_num -= Int32.Parse(_battext.text);
 
-                    if (is_success)
+                case "san":
+                case "str":
+                case "luk":
+                case "int":
+                case "dex":
+                    //대성공(d1)
+                    if (is_bigsuccess)
                     {
-                        P_stat.Coin_num += 2 * Int32.Parse(_battext.text);
-                        Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
+                        //일반 주방일 때
+                        if (GameManager.Instance.Current_stage == stage.Cook)
+                        {
+                            GameManager.Instance.Chef_success_count++;
+                        }
+
+                        if (GameManager.Instance.Current_stage == stage.Party_to_Cook)
+                        {
+                            _cook_count = 0;
+                            //탈출
+                            GameManager.Instance.Stage_start((int)stage.Escape_Cook);
+                        }
+                        else
+                        {
+                            Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
+                        }
                     }
+                    //성공(d2)
+                    else if(is_success)
+                    {
+                        //일반 주방일 때
+                        if (GameManager.Instance.Current_stage == stage.Cook)
+                        {
+                            GameManager.Instance.Chef_success_count++;
+                        }
+
+                        if (GameManager.Instance.Current_stage == stage.Party_to_Cook)
+                        {
+                            if(_cook_count < 3)
+                            {
+                                _cook_count++;
+                            }
+                        }
+
+                        if(_cook_count >= 3)
+                        {
+                            _cook_count = 0;
+                            //탈출
+                            GameManager.Instance.Stage_start((int)stage.Escape_Cook);
+                        }
+                        else
+                        {
+                            Dialogue_Manage.Instance.GetEventName(_next_Events[1].ToString());
+                        }
+                        
+                    }
+                    //실패(d3)
                     else
                     {
-                        Dialogue_Manage.Instance.GetEventName(_next_Events[1].ToString());
+                        Dialogue_Manage.Instance.GetEventName(_next_Events[2].ToString());
                     }
-                    
                     break;
-            }
-
-            
+            }          
         }
-    }
-
-    //홀 버튼
-    public void Odd()
-    {
-        _choiceOdd = true;
-    }
-
-    //짝 버튼
-    public void Even()
-    {
-        _choiceEven = true;
     }
 
     private void Show_Text()
@@ -376,11 +466,44 @@ public class Dice_panel : MonoBehaviour
             Result_show.gameObject.SetActive(true);
             switch (_stat)
             {
-                case "san":
+                case "desan":
                     Result_show.gameObject.SetActive(false);
                     break;
-                case "str":
+                case "san":
+                    if (_diceResult < P_stat.C_san / 4)
+                    {
+                        is_bigsuccess = true;
+                        Result_show.text = "대성공!!";
+                    }
+                    else if (_diceResult < P_stat.C_san)
+                    {
+                        is_success = true;
+                        Result_show.text = "성공!!";
+                    }
+                    else
+                    {
+                        is_success = false;
+                        Result_show.text = "실패...";
+                    }
                     break;
+                case "str":
+                    if (_diceResult < P_stat.P_str / 4)
+                    {
+                        is_bigsuccess = true;
+                        Result_show.text = "대성공!!";
+                    }
+                    else if (_diceResult < P_stat.P_str)
+                    {
+                        is_success = true;
+                        Result_show.text = "성공!!";
+                    }
+                    else
+                    {
+                        is_success = false;
+                        Result_show.text = "실패...";
+                    }
+                    break;
+                case "poker":
                 case "luk":
                     if (_diceResult < P_stat.P_luk / 4)
                     {
@@ -416,22 +539,12 @@ public class Dice_panel : MonoBehaviour
                     }
                     break;
                 case "dex":
-                    break;
-                case "dici":
-                    
-
-                    //홀,짝 판별
-                    if (_diceResult % 2 == 0)
+                    if (_diceResult < P_stat.P_dex / 4)
                     {
-                        _resutEven = true;
+                        is_bigsuccess = true;
+                        Result_show.text = "대성공!!";
                     }
-                    else
-                    {
-                        _resutOdd = true;
-                    }
-
-                    //최종 결과 판별
-                    if (_resutOdd && _choiceOdd || _resutEven && _choiceEven)
+                    else if (_diceResult < P_stat.P_dex)
                     {
                         is_success = true;
                         Result_show.text = "성공!!";
@@ -441,9 +554,6 @@ public class Dice_panel : MonoBehaviour
                         is_success = false;
                         Result_show.text = "실패...";
                     }
-                    break;
-                default:
-                    Result_show.gameObject.SetActive(false);
                     break;
             }
         }

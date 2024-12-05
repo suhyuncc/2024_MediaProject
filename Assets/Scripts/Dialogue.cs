@@ -4,6 +4,7 @@ using UnityEngine;
 public struct DialogueData
 {
     public int speakerType; // 말하는 캐릭터
+    public string[] BGM_SFX_Num; // BGM_SFX
     public string[] dialogue_Context; // 대화 내용
     public string[] is_select; // 선택지가 있는가?
     public string[] Secletion_Context; // 선택지 내용
@@ -17,6 +18,7 @@ public struct DialogueData
     public string[] is_reset; // 어떤 리셋인가?
     public int item_serialNum; // 아이템 시리얼 넘버
     public int stage_serialNum; // 스테이지 시리얼 넘버
+    public int sub_serialNum; // 스테이지 시리얼 넘버
 }
 public class Dialogue : MonoBehaviour
 {

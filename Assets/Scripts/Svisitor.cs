@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Svisitor : Event_button
 {
@@ -10,6 +11,8 @@ public class Svisitor : Event_button
     private GameObject _npc;
     [SerializeField]
     private GameObject _bell;
+    [SerializeField]
+    private Button _evbtn;
 
     private bool is_juice;
     private bool is_flug = true;
@@ -66,6 +69,9 @@ public class Svisitor : Event_button
             CSVParsingD.instance.Setcsv(Get_events(3));
             //다이얼로그 실행
             Dialogue_Manage.Instance.GetEventName("Example");
+            //막힌 4층 버튼 해제
+            _evbtn.interactable = true;
+            CountFull();
         }
         else
         {

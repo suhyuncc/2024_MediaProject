@@ -20,7 +20,7 @@ public class Inven_Panel : MonoBehaviour
         {
             _itemNum[i].gameObject.SetActive(false);
 
-            if (P_stat.Item_list[i] == 0)
+            if (P_stat.Item_list[i] == -1)
             {
                 _itemSlot[i].SetActive(false);
             }

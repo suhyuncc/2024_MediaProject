@@ -33,14 +33,25 @@ public class CheckBox : MonoBehaviour
 
     public void Go_dice()
     {
-        // 아이콘 세팅
-        _dice_Panel.Set_icon(_checkStat);
+        if (_dice_Panel.Player_set)
+        {
+            // 다음 대사 넘기기
+            _dice_Panel.SetEventName(_next_Events);
 
-        // 다음 대사 넘기기
-        _dice_Panel.SetEventName(_next_Events);
+            // 화면전환과 동시에 주사위 세팅
+            GameManager.Instance.Dice_On(_diceName);
+        }
+        else
+        {
+            // 아이콘 세팅
+            _dice_Panel.Set_icon(_checkStat);
 
-        // 화면전환과 동시에 주사위 세팅
-        GameManager.Instance.Dice_On(_diceName);
+            // 다음 대사 넘기기
+            _dice_Panel.SetEventName(_next_Events);
+
+            // 화면전환과 동시에 주사위 세팅
+            GameManager.Instance.Dice_On(_diceName);
+        }
 
         for (int i = 0; i < this.transform.parent.childCount; i++)
         {
