@@ -131,6 +131,11 @@ public class GameManager : MonoBehaviour
     public bool after_owner = false; // 축사이벤트 이후인지
     public bool after_sweet = false; // 스위트룸 이후인지
 
+    private void Awake()
+    {
+        Debug.Log("Awake_test");
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -933,6 +938,7 @@ public class GameManager : MonoBehaviour
         Owner_count = 0;
         Chef_count = 0;
         Chef_success_count = 0;
+        Siren_On = false;
 
         //is_ticket = false;
         casino_first = true;
@@ -954,6 +960,7 @@ public class GameManager : MonoBehaviour
         Owner_count = 0;
         Chef_count = 0;
         Chef_success_count = 0;
+        Siren_On = false;
 
         after_Party = false;
         is_ticket = false;
@@ -977,6 +984,7 @@ public class GameManager : MonoBehaviour
         Owner_count = 0;
         Chef_count = 0;
         Chef_success_count = 0;
+        Siren_On = false;
 
         after_Party = false;
         is_ticket = false;
