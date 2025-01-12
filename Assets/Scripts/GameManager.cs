@@ -67,6 +67,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject _dicePanel;
     [SerializeField]
+    private GameObject _menual;
+    [SerializeField]
+    private GameObject _miniMap;
+    [SerializeField]
     private GameObject[] _buttons;
     private GameObject _current_buttons;
     [SerializeField]
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Awake_test");
+        //Debug.Log("Awake_test");
     }
 
     // Start is called before the first frame update
@@ -147,14 +151,23 @@ public class GameManager : MonoBehaviour
 
         Siren_count = 0;
 
-        after_Party = false;
-        is_ticket = false;
-        casino_first = true;
-        party_first = true;
-        store_first = true;
-        store_after_first = true;
-        after_owner = false;
-        after_sweet = false;
+        if(P_stat.Is_menual)
+        {
+            _menual.SetActive(true);
+        }
+        else
+        {
+            _menual.SetActive(false);
+        }
+
+        if (P_stat.Is_minimap)
+        {
+            _miniMap.SetActive(true);
+        }
+        else
+        {
+            _miniMap.SetActive(false);
+        }
 
         //주사위 오브젝트 숨기기
         for (int i = 0; i < _dices.Length; i++)
@@ -162,10 +175,22 @@ public class GameManager : MonoBehaviour
             _dices[i].SetActive(false);
         }
 
-        Reset_Item();
-
         //플레이어 정보 스크립터블 오브젝트에서 스테이지 번호 가져오기
         _startNum = P_stat.Current_stage_num;
+
+        if(_startNum == 0)
+        {
+            after_Party = false;
+            is_ticket = false;
+            casino_first = true;
+            party_first = true;
+            store_first = true;
+            store_after_first = true;
+            after_owner = false;
+            after_sweet = false;
+
+            Reset_Item();
+        }
 
         // 스테이지 시작을 강제
         Stage_start(_startNum);
@@ -1143,5 +1168,11 @@ public class GameManager : MonoBehaviour
     public void Stop_SFX()
     {
         _sfxPlayer.Stop();
+    }
+
+    public void Menual_On()
+    {
+        _menual.SetActive(true);
+        P_stat.Is_menual = true;
     }
 }

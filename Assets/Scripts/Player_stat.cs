@@ -15,4 +15,6 @@ public class Player_stat : ScriptableObject
     public int C_Item_Index = 0; //아이템 리스트의 현재 인덱스
     public int Coin_num = 0; //카지노 코인 개수
     public int Current_stage_num = 0; //현재 진행중인 스테이지 번호
+    public bool Is_menual = false;
+    public bool Is_minimap = false;
 }

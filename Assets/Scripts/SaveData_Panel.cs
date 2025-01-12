@@ -65,19 +65,33 @@ public class SaveData_Panel : MonoBehaviour
         //타이틀에서 작동
         if (scene.name == "Title_Scene")
         {
+            save_num = btn_num;
             if (File.Exists(SAVE_DATA_DIRECTORY + "/SaveFile" + btn_num + ".txt"))
             {
                 //기존파일 로드
+                Load_Data();
             }
             else
             {
                 //defualt 파일 생성
+                player_Stat.P_int = 0;
+                player_Stat.P_luk = 0;
+                player_Stat.P_dex = 0;
+                player_Stat.P_str = 0;
+                player_Stat.Max_san = 90;
+                player_Stat.C_san = 90;
+                player_Stat.Coin_num = 0;
+                player_Stat.Current_stage_num = 0;
+                player_Stat.C_Item_Index = 0;
+
+                SceneManager.LoadScene("Test_Scene");
             }
-            SceneManager.LoadScene("Test_Scene");
+            
         }
         //인게임에서 작동
         else
         {
+            save_num = btn_num;
             if (File.Exists(SAVE_DATA_DIRECTORY + "/SaveFile" + btn_num + ".txt"))
             {
                 //덮으시겠습니까? 창 오픈
@@ -88,7 +102,7 @@ public class SaveData_Panel : MonoBehaviour
                 //저장하시겠습니까? 창 오픈
                 _isSave_Panel.SetActive(true);
             }
-            save_num = btn_num;
+            
         }
     }
 
@@ -106,12 +120,45 @@ public class SaveData_Panel : MonoBehaviour
         _saveData.Current_stage_num = player_Stat.Current_stage_num;
         _saveData.C_Item_Index = player_Stat.C_Item_Index;
 
-        for(int i = 0; i < player_Stat.Item_list.Length; i++)
+        _saveData.Is_menual = player_Stat.Is_menual;
+        _saveData.Is_minimap = player_Stat.Is_minimap;
+
+        for (int i = 0; i < player_Stat.Item_list.Length; i++)
         {
             _saveData.Item_list.Add(player_Stat.Item_list[i]);
         }
 
         string json = JsonUtility.ToJson(player_Stat); // 제이슨화
         File.WriteAllText(SAVE_DATA_DIRECTORY + "/SaveFile" + save_num + ".txt", json);
+
+        SceneManager.LoadScene("Title_Scene");
+    }
+
+    //기존파일 로드
+    public void Load_Data()
+    {
+        // 전체 읽어오기
+        string loadJson = File.ReadAllText(SAVE_DATA_DIRECTORY + "/SaveFile" + save_num + ".txt");
+        _loadData = JsonUtility.FromJson<Save_Data>(loadJson);
+
+        player_Stat.P_int = _loadData.P_int;
+        player_Stat.P_luk = _loadData.P_luk;
+        player_Stat.P_dex = _loadData.P_dex;
+        player_Stat.P_str = _loadData.P_str;
+        player_Stat.Max_san = _loadData.Max_san;
+        player_Stat.C_san = _loadData.C_san;
+        player_Stat.Coin_num = _loadData.Coin_num;
+        player_Stat.Current_stage_num = _loadData.Current_stage_num;
+        player_Stat.C_Item_Index = _loadData.C_Item_Index;
+
+        player_Stat.Is_menual = _loadData.Is_menual;
+        player_Stat.Is_minimap = _loadData.Is_minimap;
+
+        for (int i = 0; i < player_Stat.Item_list.Length; i++)
+        {
+            player_Stat.Item_list[i] = _loadData.Item_list[i];
+        }
+
+        SceneManager.LoadScene("Test_Scene");
     }
 }

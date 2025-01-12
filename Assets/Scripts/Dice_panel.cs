@@ -329,8 +329,11 @@ public class Dice_panel : MonoBehaviour
             Title.gameObject.SetActive(false);
             Player_set = false;
             _playerSet_count = 0;
+            
             //미니맵 UI켜기
             _miniMap.SetActive(true);
+            P_stat.Is_minimap = true;
+
             //다음 대사 실행
             Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
         }
