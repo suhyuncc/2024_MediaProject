@@ -14,7 +14,16 @@ public class SelectBox : MonoBehaviour
 
     public void Next_Dialouge()
     {
-        Dialogue_Manage.Instance.GetEventName(next_Event.ToString());
+        if(next_Event == "")
+        {
+            GameManager.Instance.current_btn.SetActive(true);
+            Dialogue_Manage.Instance.Reset_Dialogue();
+        }
+        else
+        {
+            Dialogue_Manage.Instance.GetEventName(next_Event.ToString());
+        }
+        
 
         for(int i = 0; i < this.transform.parent.childCount; i++)
         {

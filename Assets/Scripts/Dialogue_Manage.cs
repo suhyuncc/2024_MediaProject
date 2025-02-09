@@ -360,6 +360,11 @@ public class Dialogue_Manage : MonoBehaviour
                             //키패드 창 열기
                             _keypadPanel.SetActive(true);
                         }
+                        else if (dialogueData[dataIndex - 1].is_select[contextIndex] == "-3")
+                        {
+                            contextIndex = 0;
+                            Agreebox();
+                        }
                         else if (dialogueData[dataIndex - 1].is_select[contextIndex] == "1")
                         {
                             contextIndex = 0;
@@ -478,6 +483,36 @@ public class Dialogue_Manage : MonoBehaviour
         currentTypeEnd = true;
         endTriangle.SetActive(true);
         yield break;
+    }
+
+    public void Reset_Dialogue()
+    {
+        dialoguePanel.SetActive(false);//Dialogue UI 끄기
+        _subBack.SetActive(false);//sub_eventPanel 끄기
+        _logManager.Init_Log(); //로그 초기화
+    }
+
+    private void Agreebox()
+    {
+        dialogueData = CSVParsingD.GetDialogue("agree");
+
+        for (int i = 0; i < dialogueData[0].Secletion_Context.Length; i++)
+        {
+            //박스키고
+            SelectBoxes.transform.GetChild(i).gameObject.SetActive(true);
+
+            //글자 박고
+            SelectBoxes.transform.GetChild(i).gameObject.transform.GetChild(0).GetComponent<Text>().text
+                = dialogueData[0].Secletion_Context[i];
+
+            if(i == 0)
+            {
+                //다음 대사 알려주고
+                SelectBoxes.transform.GetChild(i).GetComponent<SelectBox>().SetEventName(dialogueData[0].Next_event[i]);
+            }
+            
+
+        }
     }
 
     private void selectbox()

@@ -27,6 +27,8 @@ public class Cafe_Button : Event_button
             //다이얼로그 실행
             Dialogue_Manage.Instance.GetEventName("Example");
         }
+
+        GameManager.Instance.current_btn = this.gameObject;
     }
 
     public void Dis_curse()

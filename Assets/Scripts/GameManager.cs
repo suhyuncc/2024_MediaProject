@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     private GameObject[] _dices; //주사위들
     [SerializeField]
     private TextAsset[] _csvFiles;
+    public GameObject current_btn; // 현재 진행중인 이벤트의 버튼
 
     [Header("UI")]
     [SerializeField]
