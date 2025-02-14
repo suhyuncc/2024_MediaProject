@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
+    public int card_id;
+
     [SerializeField]
     private Sprite[] card_images;
     [SerializeField]
