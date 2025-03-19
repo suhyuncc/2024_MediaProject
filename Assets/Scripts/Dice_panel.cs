@@ -224,6 +224,7 @@ public class Dice_panel : MonoBehaviour
                 _resultIcon.sprite = _resultIcons[0];
                 break;
             case "desan":
+            case "casino":
                 _icon.sprite = _icons[0];
                 _resultIcon.gameObject.SetActive(false);
                 break;
@@ -292,6 +293,7 @@ public class Dice_panel : MonoBehaviour
                 _StatTxt.text = $"{P_stat.P_dex}";
                 break;
 
+            case "casino":
             case "desan":
                 _verdict.text = "";
                 break;
@@ -346,6 +348,10 @@ public class Dice_panel : MonoBehaviour
                     P_stat.C_san -= _diceResult;
                     //다음 대사 실행
                     Dialogue_Manage.Instance.GetEventName(_next_Events[0].ToString());
+                    break;
+
+                case "casino":
+                    CardGameManager.Instance.Dealer_Flip(_diceResult);
                     break;
 
                 case "poker":
@@ -469,6 +475,7 @@ public class Dice_panel : MonoBehaviour
             Result_show.gameObject.SetActive(true);
             switch (_stat)
             {
+                case "casino":
                 case "desan":
                     Result_show.gameObject.SetActive(false);
                     break;

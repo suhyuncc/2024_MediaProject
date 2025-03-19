@@ -139,12 +139,13 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         //Debug.Log("Awake_test");
+        Instance = this;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Instance = this;
+        
 
         First_stage = stage.RedRoom;
 
@@ -1163,6 +1164,14 @@ public class GameManager : MonoBehaviour
         _sfxPlayer.Pause();
         _sfxPlayer.clip = null;
         _sfxPlayer.clip = _sfxClips[i];
+        _sfxPlayer.Play();
+    }
+
+    public void Change_SFX(AudioClip clip)
+    {
+        _sfxPlayer.Pause();
+        _sfxPlayer.clip = null;
+        _sfxPlayer.clip = clip;
         _sfxPlayer.Play();
     }
 
