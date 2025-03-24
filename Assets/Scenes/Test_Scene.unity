@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -42849,7 +42849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e4aa0f4030f0a458f3b6d7a8286681, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startNum: 8
+  _startNum: 1
   P_stat: {fileID: 11400000, guid: d3b3188177798e5418b8c34da984cc94, type: 2}
   _dices:
   - {fileID: 621472491}
@@ -42887,6 +42887,7 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 1ee6a905a9edbae41ba807e6b41810e9, type: 3}
   - {fileID: 4900000, guid: 48f8d49b42cb7b648ab8b41aa57e9c72, type: 3}
   - {fileID: 4900000, guid: 678a266bfde8985499ab68ff9a858ab7, type: 3}
+  current_btn: {fileID: 0}
   _canvas: {fileID: 1687433071}
   _mainCam: {fileID: 837376841}
   _diceCam: {fileID: 456106195}

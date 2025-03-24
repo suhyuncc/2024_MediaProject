@@ -21,6 +21,6 @@ MonoBehaviour:
   Item_list: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   C_Item_Index: 0
   Coin_num: 0
-  Current_stage_num: 3
+  Current_stage_num: 0
   Is_menual: 0
   Is_minimap: 0
