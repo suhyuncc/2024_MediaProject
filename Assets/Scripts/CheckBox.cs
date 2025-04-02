@@ -41,6 +41,12 @@ public class CheckBox : MonoBehaviour
             // 화면전환과 동시에 주사위 세팅
             GameManager.Instance.Dice_On(_diceName);
         }
+        else if (_checkStat == "poker")
+        {
+            GameManager.Instance.Play_Casino();
+
+            CardGameManager.Instance.SetEventName(_next_Events[0]);
+        }
         else
         {
             // 아이콘 세팅

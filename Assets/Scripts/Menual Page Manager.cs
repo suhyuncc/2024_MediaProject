@@ -25,6 +25,13 @@ public class MenualPageManager : MonoBehaviour
     private void Start()
     {
         set_contents(current_page_index);
+        page_num.text = (current_page_index + 1).ToString();
+
+        back.onClick.RemoveAllListeners();
+        next.onClick.RemoveAllListeners();
+
+        back.onClick.AddListener(Push_back);
+        next.onClick.AddListener(Push_next);
     }
 
     // Update is called once per frame
@@ -54,21 +61,21 @@ public class MenualPageManager : MonoBehaviour
         page_content.text = title + '\n';
         for (int i = 0; i < contents[page].menual.Length; i++)
         {
-            page_content.text += '\n' + contents[page].menual[i];
+            page_content.text += '\n' + contents[page].menual[i] + '\n';
         }
         //page_content.text = title + '\n' + '\n' + strings[page];
     }
 
     public void Push_back()
     {
-        current_page_index--;
+        current_page_index -= 1;
         page_num.text = (current_page_index + 1).ToString();
         set_contents(current_page_index);
     }
 
     public void Push_next()
     {
-        current_page_index++;
+        current_page_index += 1;
         page_num.text = (current_page_index + 1).ToString();
         set_contents(current_page_index);
     }

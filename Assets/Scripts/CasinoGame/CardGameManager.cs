@@ -31,6 +31,9 @@ public class CardGameManager : MonoBehaviour
     public List<int> Deck = new List<int>();
 
     [SerializeField]
+    private GameObject _mainObject;
+
+    [SerializeField]
     private Card[] player_cards;
     [SerializeField]
     private Card[] dealer_cards;
@@ -47,13 +50,17 @@ public class CardGameManager : MonoBehaviour
     [SerializeField]
     private GameObject[] d_lifes;
     [SerializeField]
-    private GameObject p_energy;
+    private GameObject[] p_energy;
     [SerializeField]
-    private GameObject d_energy;
+    private GameObject[] d_energy;
     [SerializeField]
     private Button dice_btn;
     [SerializeField]
     private Button fight_btn;
+    [SerializeField]
+    private Button rule_btn;
+    [SerializeField]
+    private GameObject rule_panel;
     [Header("Reroll")]
     [SerializeField]
     private GameObject M_panel;
@@ -61,6 +68,12 @@ public class CardGameManager : MonoBehaviour
     private Button reroll_btn;
     [SerializeField]
     private Button cancel_btn;
+
+    [Header("Result")]
+    [SerializeField]
+    private RawImage result_panel;
+    [SerializeField]
+    private Texture[] result_images;
 
     [Header("Audio")]
     [SerializeField]
@@ -75,21 +88,35 @@ public class CardGameManager : MonoBehaviour
     private int player_life;
     private int dealer_life;
 
+    private bool is_start;
+
+    private string _next_Event; // 다음 대사
+
     private void Awake()
     {
         Instance = this;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
-
         player_life = 0;
         dealer_life = 0;
 
+        for(int i = 0; i < p_lifes.Length; i++)
+        {
+            p_lifes[i].SetActive(false);
+            d_lifes[i].SetActive(false);
+        }
+
         phase = Phase.standby;
-        Set();
+        is_start = false;
+
+        rule_panel.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
     // Update is called once per frame
@@ -139,27 +166,53 @@ public class CardGameManager : MonoBehaviour
         //테스트용 코드
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            dealer_cards[0].Flip();
+            player_cards[0].Big_Attack(0.8f);
         }
         else if(Input.GetKeyDown(KeyCode.Alpha2))
         {
-            dealer_cards[1].Flip();
+            player_cards[1].Big_Attack(0.8f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            dealer_cards[2].Flip();
+            player_cards[2].Big_Attack(0.8f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            dealer_cards[3].Flip();
+            player_cards[3].Big_Attack(0.8f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            dealer_cards[4].Flip();
+            player_cards[4].Big_Attack(0.8f);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            dealer_cards[5].Flip();
+            player_cards[5].Big_Attack(0.8f);
+        }
+    }
+
+    public void Game_Start()
+    {
+        if (!is_start)
+        {
+            Set();
+            is_start = true;
+        }
+
+        for (int i = 0; i < H_hands.Length; i++)
+        {
+            H_hands[i].GetComponent<BoxCollider2D>().enabled = true;
+        }
+    }
+
+    public void Rule()
+    {
+        rule_panel.transform.SetAsLastSibling();
+        rule_panel.SetActive(true);
+
+        //룰 페이지 활성화시 카드 클릭 방지
+        for(int i = 0; i < H_hands.Length; i++)
+        {
+            H_hands[i].GetComponent<BoxCollider2D>().enabled = false;
         }
     }
 
@@ -197,6 +250,7 @@ public class CardGameManager : MonoBehaviour
     {
         dice_btn.gameObject.SetActive(false);
         fight_btn.gameObject.SetActive(false);
+        rule_btn.gameObject.SetActive(false);
 
         for (int i = 0; i < player_cards.Length; i++)
         {
@@ -325,6 +379,24 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
+    private void all_reset()
+    {
+        for (int i = 0; i < player_cards.Length; i++)
+        {
+            player_cards[i].Card_reset();
+        }
+
+        for (int i = 0; i < dealer_cards.Length; i++)
+        {
+            dealer_cards[i].Card_reset();
+        }
+
+        for (int i = 0; i < M_cards.Length; i++)
+        {
+            M_cards[i].Card_reset();
+        }
+    }
+
     IEnumerator roll()
     {
         for (int i = 0; i < M_cards.Length; i++)
@@ -402,6 +474,7 @@ public class CardGameManager : MonoBehaviour
 
         //주사위 버튼 활성화
         dice_btn.gameObject.SetActive(true);
+        rule_btn.gameObject.SetActive(true);
 
         //phase = Phase.main;
 
@@ -431,7 +504,7 @@ public class CardGameManager : MonoBehaviour
         Debug.Log($"Player: [{string.Join(", ", Player)}]");
     }
 
-    private void Player_action(int num)
+    private void Player_action(int num, int index)
     {
         switch (num)
         {
@@ -446,24 +519,25 @@ public class CardGameManager : MonoBehaviour
                 player_charge += 1;
                 Debug.Log("플레이어의 기 모으기!!");
                 GameManager.Instance.Change_SFX(sounds[1]);
-                p_energy.SetActive(true);
+                energy_increase(true, player_charge);
                 break;
             //공격
             case 2:
                 //원기옥
                 if(player_charge >= 3)
                 {
-                    player_charge = 0;
+                    energy_reset(true);
+                    player_cards[index].Big_Attack(0.5f);
                     dealer_guard -= 20;
                     Debug.Log("플레이어의 원!!!기!!옥!!!");
                 }
                 else if (player_charge > 0)
                 {
+                    energy_decrease(true, player_charge);
                     player_charge -= 1;
                     dealer_guard -= 1;
                     Debug.Log("플레이어의 공격!!");
                     GameManager.Instance.Change_SFX(sounds[3]);
-                    p_energy.SetActive(false);
                 }
                 else
                 {
@@ -474,7 +548,56 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    private void Dealer_action(int num)
+    private void energy_increase(bool is_player, int energy_index)
+    {
+        if (is_player)
+        {
+            p_energy[energy_index - 1].SetActive(true);
+        }
+        else
+        {
+            d_energy[energy_index - 1].SetActive(true);
+        }
+    }
+
+    private void energy_decrease(bool is_player, int energy_index)
+    {
+        if (is_player)
+        {
+            p_energy[energy_index - 1].SetActive(false);
+        }
+        else
+        {
+            d_energy[energy_index - 1].SetActive(false);
+        }
+    }
+
+    private void energy_reset(bool is_player)
+    {
+        if (is_player)
+        {
+            
+            while (player_charge > 0)
+            {
+                Debug.Log("플레이어 리셋");
+                energy_decrease(true, player_charge);
+                player_charge--;
+            }
+        }
+        else
+        {
+            
+            while (dealer_charge > 0)
+            {
+                Debug.Log("딜러 리셋");
+                energy_decrease(false, dealer_charge);
+                dealer_charge--;
+            }
+        }
+        
+    }
+
+    private void Dealer_action(int num, int index)
     {
         switch (num)
         {
@@ -489,24 +612,25 @@ public class CardGameManager : MonoBehaviour
                 dealer_charge += 1;
                 Debug.Log("딜러의 기 모으기!!");
                 GameManager.Instance.Change_SFX(sounds[1]);
-                d_energy.SetActive(true);
+                energy_increase(false, dealer_charge);
                 break;
             //공격
             case 2:
                 //원기옥
                 if (dealer_charge >= 3)
                 {
-                    dealer_charge = 0;
+                    energy_reset(false);
+                    dealer_cards[index].Big_Attack(0.5f);
                     player_guard -= 20;
                     Debug.Log("딜러의 원!!!기!!옥!!!");
                 }
                 else if (dealer_charge > 0)
                 {
+                    energy_decrease(false, dealer_charge);
                     dealer_charge -= 1;
                     player_guard -= 1;
                     Debug.Log("딜러의 공격!!");
                     GameManager.Instance.Change_SFX(sounds[3]);
-                    d_energy.SetActive(false);
                 }
                 else
                 {
@@ -529,7 +653,6 @@ public class CardGameManager : MonoBehaviour
                 dealer_cards[index].Flip();
             }
             
-
             player_guard = 0;
 
             dealer_guard = 0;
@@ -540,7 +663,7 @@ public class CardGameManager : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(0.5f);
 
-            Dealer_action(dealer_cards[index].card_id);
+            Dealer_action(dealer_cards[index].card_id, index);
 
             yield return new WaitForSecondsRealtime(1.8f);
 
@@ -548,7 +671,7 @@ public class CardGameManager : MonoBehaviour
 
             yield return new WaitForSecondsRealtime(0.5f);
 
-            Player_action(player_cards[index].card_id);
+            Player_action(player_cards[index].card_id, index);
 
             yield return new WaitForSecondsRealtime(1.8f);
 
@@ -559,10 +682,30 @@ public class CardGameManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1.5f);
 
-        Debug.Log("재시작!!");
-        p_energy.SetActive(false);
-        d_energy.SetActive(false);
-        Set();
+        if(player_life >= 3 || dealer_life >= 3)
+        {
+            //승리시
+            if(player_life > dealer_life)
+            {
+                result_panel.texture = result_images[0];
+                GameManager.Instance.Increase_coin(20);
+            }
+            else
+            {
+                result_panel.texture = result_images[1];
+                GameManager.Instance.Decrease_coin(20);
+            }
+
+            all_reset();
+            result_panel.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("재시작!!");
+
+            Set();
+        }
+        
 
         StopCoroutine("fight");
     }
@@ -574,12 +717,14 @@ public class CardGameManager : MonoBehaviour
             Debug.Log("플레이어 승리");
             player_life += 1;
             p_lifes[player_life - 1].SetActive(true);
+            GameManager.Instance.Change_SFX(sounds[5]);
         }
         else if (player_guard < 0)
         {
             Debug.Log("딜러 승리");
             dealer_life += 1;
             d_lifes[dealer_life - 1].SetActive(true);
+            GameManager.Instance.Change_SFX(sounds[5]);
         }
         else
         {
@@ -587,9 +732,20 @@ public class CardGameManager : MonoBehaviour
         }
 
         player_guard = 0;
-        player_charge = 0;
-
         dealer_guard = 0;
-        dealer_charge = 0;
+
+        energy_reset(true);
+        energy_reset(false);
+    }
+
+    public void SetEventName(string _eventName)
+    {
+        _next_Event = _eventName;
+    }
+
+    public void Start_dialouge()
+    {
+        Dialogue_Manage.Instance.GetEventName(_next_Event.ToString());
+        _mainObject.SetActive(false);
     }
 }

@@ -12,6 +12,12 @@ public class SaveData_Panel : MonoBehaviour
     [SerializeField]
     private Text[] _btnTexts;
     [SerializeField]
+    private Text[] _locations;
+    [SerializeField]
+    private Image[] _btnImages;
+    [SerializeField]
+    private Sprite _btnImage;
+    [SerializeField]
     private GameObject _isData_Panel;
     [SerializeField]
     private GameObject _isSave_Panel;
@@ -33,6 +39,7 @@ public class SaveData_Panel : MonoBehaviour
         for (int i = 0; i < _btnTexts.Length; i++)
         {
             string file_num = $"{i + 1}";
+            //파일 있는 경우
             if(File.Exists(SAVE_DATA_DIRECTORY + "/SaveFile" + file_num + ".txt"))
             {
                 // 전체 읽어오기
@@ -40,12 +47,19 @@ public class SaveData_Panel : MonoBehaviour
                 _loadData = JsonUtility.FromJson<Save_Data>(loadJson);
 
                 _btnTexts[i].alignment = TextAnchor.MiddleLeft;
+                _btnTexts[i].fontSize = 28;
                 _btnTexts[i].text = Show_Data(_loadData);
+                _btnImages[i].sprite = _btnImage;
+
+                _locations[i].text = _loadData.location;
             }
             else
             {
                 _btnTexts[i].alignment = TextAnchor.MiddleCenter;
+                _btnTexts[i].fontSize = 45;
                 _btnTexts[i].text = $"저장 슬롯{i+1}";
+
+                _locations[i].text = "";
             }
         }
     }
@@ -53,8 +67,8 @@ public class SaveData_Panel : MonoBehaviour
     private string Show_Data(Save_Data stat)
     {
         string Data;
-        Data = $"정신력 {stat.C_san} / {stat.Max_san} \n" +
-            $"근력: {stat.P_str}\t\t행운: {stat.P_luk}\t\t지능: {stat.P_int}\t\t민첩: {stat.P_dex}";
+        Data = $" 정신력 {stat.C_san} / {stat.Max_san} \n" +
+            $" 근력: {stat.P_str}\t\t행운: {stat.P_luk}\t\t지능: {stat.P_int}\t\t민첩: {stat.P_dex}";
         return Data;
     }
 
@@ -123,6 +137,8 @@ public class SaveData_Panel : MonoBehaviour
         _saveData.Is_menual = player_Stat.Is_menual;
         _saveData.Is_minimap = player_Stat.Is_minimap;
 
+        _saveData.location = player_Stat.location;
+
         for (int i = 0; i < player_Stat.Item_list.Length; i++)
         {
             _saveData.Item_list.Add(player_Stat.Item_list[i]);
@@ -153,6 +169,8 @@ public class SaveData_Panel : MonoBehaviour
 
         player_Stat.Is_menual = _loadData.Is_menual;
         player_Stat.Is_minimap = _loadData.Is_minimap;
+
+        player_Stat.location = _loadData.location;
 
         for (int i = 0; i < player_Stat.Item_list.Length; i++)
         {

@@ -76,6 +76,12 @@ public class GameManager : MonoBehaviour
     private GameObject _current_buttons;
     [SerializeField]
     private Text _location;
+    [SerializeField]
+    private GameObject _settingPanel;
+    [SerializeField]
+    private GameObject _backBtn;
+    [SerializeField]
+    private GameObject _casinoPanel;
 
     [Header("EV")]
     [SerializeField]
@@ -125,6 +131,7 @@ public class GameManager : MonoBehaviour
     private Camera _CurrentCam;//현재 카메라
 
     private int _currentItemIndex; // 현재 화면에서 얻은 아이템의 수
+    private bool is_setting;
 
     [Header("Toggles")]
     public bool after_Party = false; // 연회장 방문 유무
@@ -140,6 +147,7 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("Awake_test");
         Instance = this;
+        is_setting = false;
     }
 
     // Start is called before the first frame update
@@ -196,6 +204,35 @@ public class GameManager : MonoBehaviour
 
         // 스테이지 시작을 강제
         Stage_start(_startNum);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            is_setting = !is_setting;
+
+            if(is_setting)
+            {
+                Setting_On();
+            }
+            else
+            {
+                Setting_Off();
+            }
+        }
+    }
+
+    private void Setting_On()
+    {
+        _settingPanel.SetActive(true);
+        _backBtn.SetActive(true);
+    }
+
+    private void Setting_Off()
+    {
+        _settingPanel.SetActive(false);
+        _backBtn.SetActive(false);
     }
 
     public void Dice_On(string dice_name)
@@ -956,6 +993,9 @@ public class GameManager : MonoBehaviour
                 Dialogue_Start();
                 break;
         }
+
+        //현재 진행 위치 전달
+        P_stat.location = _location.text;
     }
 
     // deadend 리셋 (SoftReset버튼으로 실행)
@@ -1184,5 +1224,25 @@ public class GameManager : MonoBehaviour
     {
         _menual.SetActive(true);
         P_stat.Is_menual = true;
+    }
+
+    public void Play_Casino()
+    {
+        _casinoPanel.SetActive(true);
+    }
+
+    public void Increase_coin(int num)
+    {
+        P_stat.Coin_num += num;
+    }
+
+    public void Decrease_coin(int num)
+    {
+        P_stat.Coin_num -= num;
+
+        if(P_stat.Coin_num < 0)
+        {
+            P_stat.Coin_num = 0;
+        }
     }
 }

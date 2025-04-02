@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -40,7 +41,7 @@ public class Card : MonoBehaviour
     [SerializeField]
     private AudioClip flip_sfx;
 
-
+    private Image mask;
     private void OnEnable()
     {
         InitPosition = this.GetComponent<RectTransform>().anchoredPosition;
@@ -51,7 +52,12 @@ public class Card : MonoBehaviour
         {
             Flip();
         }
-        
+
+        if (is_player)
+        {
+            //transform.SetSiblingIndex(7);
+            mask = this.transform.GetChild(0).GetComponent<Image>();
+        }
     }
 
     private void Update()
@@ -82,6 +88,7 @@ public class Card : MonoBehaviour
         if (is_player)
         {
             transform.SetSiblingIndex(7);
+            mask = this.transform.GetChild(0).GetComponent<Image>();
         }
     }
 
@@ -134,10 +141,13 @@ public class Card : MonoBehaviour
 
     public void Battle(float during)
     {
-        
-        
-
         StartCoroutine(battle(during));
+    }
+
+    public void Big_Attack(float during)
+    {
+        image.sprite = card_images[4];
+        StartCoroutine(big_attack(during));
     }
 
     public void OFF_collider()
@@ -249,8 +259,9 @@ public class Card : MonoBehaviour
              
 
             target = null;
-            on_drag = false;
         }
+
+        on_drag = false;
     }
 
     private void OnMouseOver()
@@ -380,6 +391,26 @@ public class Card : MonoBehaviour
         }
 
         StopCoroutine(battle(during));
+    }
+
+    IEnumerator big_attack(float during)
+    {
+        float time = 0f;
+
+        mask.fillAmount = 1;
+        
+
+        while (time < during)
+        {
+            time += Time.deltaTime / during;
+
+            mask.fillAmount = 1 - ((1 / during) * time);
+            Debug.Log($"{mask.fillAmount}");
+
+            yield return null;
+        }
+
+        StopCoroutine(big_attack(during));
     }
 
     public void Change_Image(int index)

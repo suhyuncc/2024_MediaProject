@@ -19,7 +19,6 @@ public class Behind_setting : MonoBehaviour
     public void Set()
     {
         animator.SetTrigger("set");
-        Debug.Log("hi");
         GameManager.Instance.Change_SFX(set_sfx);
         StartCoroutine(Set(0.95f));
     }

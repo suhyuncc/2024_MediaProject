@@ -1,1 +1,0 @@
-{"P_int":0,"P_str":0,"P_dex":0,"P_luk":0,"Max_san":90,"C_san":88,"Item_list":[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],"C_Item_Index":3,"Coin_num":0,"Current_stage_num":4}

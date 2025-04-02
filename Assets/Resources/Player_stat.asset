@@ -17,10 +17,11 @@ MonoBehaviour:
   P_dex: 0
   P_luk: 0
   Max_san: 90
-  C_san: 87
+  C_san: 90
   Item_list: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   C_Item_Index: 0
   Coin_num: 0
   Current_stage_num: 0
   Is_menual: 0
   Is_minimap: 0
+  location: 

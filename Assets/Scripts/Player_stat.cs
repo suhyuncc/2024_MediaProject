@@ -17,4 +17,5 @@ public class Player_stat : ScriptableObject
     public int Current_stage_num = 0; //현재 진행중인 스테이지 번호
     public bool Is_menual = false;
     public bool Is_minimap = false;
+    public string location = "";
 }
