@@ -6,9 +6,9 @@ using static Unity.Collections.AllocatorManager;
 public class Command : ICommand
 {
     private GameObject _block;
-    private Transform _point;
+    private Vector2 _point;
 
-    public Command(GameObject block, Transform point)
+    public Command(GameObject block, Vector2 point)
     {
         this._block = block;
         this._point = point;

@@ -9,13 +9,14 @@ public class Block : MonoBehaviour
     [SerializeField]
     private RectTransform points;
     [SerializeField]
-    private RectTransform init_point;
+    private int child_num;
 
     private Vector3 mousePosition;
     private Vector2 originalPosition;
     private RectTransform R_transform;
 
-    private Transform prev_point;
+    [SerializeField]
+    private Vector2 prev_point;
 
     public bool is_vertical;
     public bool is_collision;
@@ -31,8 +32,6 @@ public class Block : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float init_x = points.anchoredPosition.x + init_point.localPosition.x;
-        float init_y = points.anchoredPosition.y + init_point.localPosition.y;
 
         R_transform = this.GetComponent<RectTransform>();
 
@@ -50,6 +49,7 @@ public class Block : MonoBehaviour
         is_collision = false;
 
         originalPosition = R_transform.anchoredPosition;
+        prev_point = originalPosition - points.anchoredPosition;
     }
 
     // Update is called once per frame
@@ -67,7 +67,7 @@ public class Block : MonoBehaviour
 
     private Transform neariest_point()
     {
-        Transform arrive_point = prev_point;
+        Transform arrive_point = points.GetChild(0);
         Vector2 end_pos = this.GetComponent<RectTransform>().anchoredPosition;
 
         float small_y = 999999.9f;
@@ -132,6 +132,7 @@ public class Block : MonoBehaviour
         else
         {
             x_float = ((Input.mousePosition.x - 960.0f) - mousePosition.x) - R_transform.anchoredPosition.x;
+
             if(x_float > 0)
             {
                 x_direct = 1;
@@ -185,15 +186,18 @@ public class Block : MonoBehaviour
 
         Transform end = neariest_point();
 
-        prev_point = end;
+        Vector2 end_pos = end.localPosition;
+        Debug.Log(end_pos);
 
-        Move_to_point(end);
+        prev_point = end_pos;
+
+        Move_to_point(end_pos);
     }
 
-    public void Move_to_point(Transform end)
+    public void Move_to_point(Vector2 end)
     {
-        float new_x = points.anchoredPosition.x + end.localPosition.x;
-        float new_y = points.anchoredPosition.y + end.localPosition.y;
+        float new_x = points.anchoredPosition.x + end.x;
+        float new_y = points.anchoredPosition.y + end.y;
 
         this.GetComponent<RectTransform>().anchoredPosition = new Vector2(new_x, new_y);
     }

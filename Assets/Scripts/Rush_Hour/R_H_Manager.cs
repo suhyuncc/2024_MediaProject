@@ -22,7 +22,7 @@ public class R_H_Manager : MonoBehaviour
         text.text = _undoStack.Count.ToString();
     }
 
-    public void RunBlockCommand(GameObject block, Transform point)
+    public void RunBlockCommand(GameObject block, Vector2 point)
     {
         ICommand command = new Command(block, point);
         _undoStack.Push(command);
