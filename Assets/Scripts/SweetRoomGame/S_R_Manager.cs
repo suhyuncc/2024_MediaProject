@@ -10,6 +10,8 @@ public class S_R_Manager : MonoBehaviour
     public bool is_over;
 
     [SerializeField]
+    private GameObject s_r_game;
+    [SerializeField]
     private Transform parent;
     [SerializeField]
     private GameObject node_prefab;
@@ -24,7 +26,11 @@ public class S_R_Manager : MonoBehaviour
     [SerializeField]
     private GameObject monster_image;
     [SerializeField]
+    private Sprite origin_image;
+    [SerializeField]
     private Animator monster_anim;
+    [SerializeField]
+    private GameObject _finishPanel;
 
     public bool monster;
 
@@ -36,6 +42,11 @@ public class S_R_Manager : MonoBehaviour
     {
         instance = this;
         monster = false;
+    }
+
+    private void OnEnable()
+    {
+        //Start_stage(1);
     }
 
     // Update is called once per frame
@@ -60,6 +71,7 @@ public class S_R_Manager : MonoBehaviour
             spawn();
             if (monster)
             {
+                Debug.Log("해제!!");
                 monster = false;
                 monster_anim.SetTrigger("off");
             }
@@ -70,11 +82,14 @@ public class S_R_Manager : MonoBehaviour
 
             if(ran < 4)
             {
+                Debug.Log("경계!!");
                 monster = true;
                 monster_anim.SetTrigger("on");
             }
             yield return new WaitForSecondsRealtime(spawntime);
         }
+
+        StopCoroutine("stage1");
     }
 
     IEnumerator stage2()
@@ -101,20 +116,27 @@ public class S_R_Manager : MonoBehaviour
             }
             yield return new WaitForSecondsRealtime(spawntime);
         }
+
+        StopCoroutine("stage2");
     }
 
     IEnumerator stage3()
     {
         Debug.Log("스테이지3 시작!!");
 
-        while (!is_over)
+        int node_num = 0;
+
+        while (!is_over && node_num < 30)
         {
             spawn3();
+            node_num++;
 
             float spawntime = Random.Range(0.3f, 0.5f);
 
             yield return new WaitForSecondsRealtime(spawntime);
         }
+
+        StopCoroutine("stage3");
     }
 
     private void spawn()
@@ -171,7 +193,8 @@ public class S_R_Manager : MonoBehaviour
                 if (monster)
                 {
                     is_over = true;
-                    Debug.Log("클릭 실패!!");
+                    Debug.Log("클릭해서 죽음!!");
+                    fail();
                 }
                 else
                 {
@@ -200,6 +223,8 @@ public class S_R_Manager : MonoBehaviour
                 {
                     is_over = true;
                     Debug.Log("클리어!!");
+                    StopAllCoroutines();
+                    _finishPanel.SetActive(true);
                 }
                 else
                 {
@@ -220,12 +245,14 @@ public class S_R_Manager : MonoBehaviour
                 if (!monster)
                 {
                     is_over = true;
-                    Debug.Log("클릭 실패!!");
+                    Debug.Log("클릭 안해서 죽음!!");
+                    fail();
                 }          
                 break;
             case 3:
                 is_over = true;
                 Debug.Log("클릭 실패!!");
+                fail();
                 break;
         }
     }
@@ -245,19 +272,20 @@ public class S_R_Manager : MonoBehaviour
                 StopCoroutine("stage2");
                 break;
         }
-
-        
     }
 
     public void Start_stage(int num)
     {
-        
+        StopAllCoroutines();
+
+        monster = false;
         is_over = false;
 
         switch (num)
         {
             case 1:
                 stage_num = 1;
+                set_stage(1);
                 StartCoroutine("stage1");
                 break;
             case 2:
@@ -284,10 +312,26 @@ public class S_R_Manager : MonoBehaviour
         switch (num)
         {
             case 1:
+                monster_image.SetActive(true);
+
+                monster_image.transform.localPosition = new Vector3(-100.0f, -27.0f, 0f);
+                monster_image.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+
+                //이미지 원상태로 변경
+                monster_image.GetComponent<Animator>().enabled = false;
+                monster_image.GetComponent<Image>().sprite = origin_image;
+                monster_image.GetComponent<Animator>().enabled = true;
+                
+
+                background.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                background.GetComponent<RawImage>().texture = background_images[0];
                 break;
             case 2:
                 monster_image.transform.localPosition = new Vector3(-280.0f, -170.0f, 0f);
                 monster_image.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+
+                //이미지 원상태로 변경
+                monster_image.GetComponent<Image>().sprite = origin_image;
 
                 background.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 background.GetComponent<RawImage>().texture = background_images[1];
@@ -315,6 +359,13 @@ public class S_R_Manager : MonoBehaviour
                 StartCoroutine("walk3");
                 break;
         }
+    }
+
+    public void fail()
+    {
+        Dialogue_Manage.Instance.Soft_On();
+        
+        s_r_game.SetActive(false);
     }
 
     IEnumerator walk()
@@ -412,7 +463,6 @@ public class S_R_Manager : MonoBehaviour
         }
 
         StopCoroutine("walk3");
-
     }
 
     IEnumerator padeInOut()

@@ -47,6 +47,12 @@ public class CheckBox : MonoBehaviour
 
             CardGameManager.Instance.SetEventName(_next_Events[0]);
         }
+        else if (_checkStat == "rush")
+        {
+            GameManager.Instance.Play_Rush();
+
+            R_H_Manager.instance.SetEventName(_next_Events);
+        }
         else
         {
             // 아이콘 세팅

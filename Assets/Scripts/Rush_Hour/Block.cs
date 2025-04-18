@@ -16,8 +16,12 @@ public class Block : MonoBehaviour
     private RectTransform R_transform;
 
     [SerializeField]
+    private Vector2 finish_point;
+    [SerializeField]
     private Vector2 prev_point;
+    private Vector2 origin_point;
 
+    public bool is_main;
     public bool is_vertical;
     public bool is_collision;
     private bool is_drag;
@@ -50,6 +54,7 @@ public class Block : MonoBehaviour
 
         originalPosition = R_transform.anchoredPosition;
         prev_point = originalPosition - points.anchoredPosition;
+        origin_point = prev_point;
     }
 
     // Update is called once per frame
@@ -182,16 +187,30 @@ public class Block : MonoBehaviour
     {
         is_drag = false;
 
-        R_H_Manager.instance.RunBlockCommand(this.gameObject, prev_point);
-
         Transform end = neariest_point();
 
+        if((is_vertical && MathF.Abs(end.localPosition.y - prev_point.y) > 10) ||
+            (!is_vertical && MathF.Abs(end.localPosition.x - prev_point.x) > 10))
+        {
+            R_H_Manager.instance.RunBlockCommand(this.gameObject, prev_point);
+        }
+
         Vector2 end_pos = end.localPosition;
-        Debug.Log(end_pos);
 
         prev_point = end_pos;
 
         Move_to_point(end_pos);
+
+        if(is_main && end_pos == finish_point)
+        {
+            R_H_Manager.instance.On_Finish(true);
+        }
+
+    }
+
+    public void Reset_point()
+    {
+        prev_point = origin_point;
     }
 
     public void Move_to_point(Vector2 end)

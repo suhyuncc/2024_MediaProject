@@ -80,8 +80,12 @@ public class GameManager : MonoBehaviour
     private GameObject _settingPanel;
     [SerializeField]
     private GameObject _backBtn;
+
+    [Header("Mini_Games")]
     [SerializeField]
     private GameObject _casinoPanel;
+    [SerializeField]
+    private GameObject _rushPanel;
 
     [Header("EV")]
     [SerializeField]
@@ -111,6 +115,10 @@ public class GameManager : MonoBehaviour
     public int Manager_count;
     [SerializeField]
     private TextAsset[] _managerCSV; //매니저 이벤트
+
+    [Header("Sweet_Room")]
+    [SerializeField]
+    private GameObject _sweetRoom;
 
     [Header("STAGE")]
     public stage Current_stage;
@@ -475,6 +483,11 @@ public class GameManager : MonoBehaviour
 
         switch (_stage)
         {
+            case -6:
+                _sweetRoom.SetActive(true);
+                Dialogue_Manage.Instance.Change_back(22);
+                CSVParsingD.instance.Setcsv(_csvFiles[28]);
+                break;
             case -5:    //전기실 이벤트 실패시
                 Set_BGM(6);
                 Time.timeScale = 1;
@@ -1229,6 +1242,10 @@ public class GameManager : MonoBehaviour
     public void Play_Casino()
     {
         _casinoPanel.SetActive(true);
+    }
+    public void Play_Rush()
+    {
+        _rushPanel.SetActive(true);
     }
 
     public void Increase_coin(int num)

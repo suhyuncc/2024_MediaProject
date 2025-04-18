@@ -130,6 +130,7 @@ public class Dice_panel : MonoBehaviour
                     _icon.sprite = _icons[0];
                     break;
             }
+            _icon.gameObject.SetActive(false);
         }
         else
         {
@@ -216,6 +217,8 @@ public class Dice_panel : MonoBehaviour
     {
         _stat = stat;
         _resultIcon.gameObject.SetActive(true);
+        _icon.gameObject.SetActive(true);
+        _icon.SetNativeSize();
 
         switch (stat)
         {

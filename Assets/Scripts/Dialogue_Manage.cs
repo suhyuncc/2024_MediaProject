@@ -389,7 +389,7 @@ public class Dialogue_Manage : MonoBehaviour
                         else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "1")
                         {
                             // deadend를 위한 버튼
-                            _softReset.SetActive(true);
+                            Soft_On();
                         }
                         else if (dialogueData[dataIndex - 1].is_reset[contextIndex] == "2")
                         {
@@ -638,5 +638,11 @@ public class Dialogue_Manage : MonoBehaviour
         {
             P_stat.C_san = 90;
         }
+    }
+
+    // 소프트 리셋 버튼
+    public void Soft_On()
+    {
+        _softReset.SetActive(true);
     }
 }

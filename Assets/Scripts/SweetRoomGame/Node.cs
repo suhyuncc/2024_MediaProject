@@ -66,6 +66,7 @@ public class Node : MonoBehaviour
         if(is_fake)
         {
             S_R_Manager.instance.is_over = true;
+            S_R_Manager.instance.fail();
             Debug.Log("클릭 실패!!");
         }
         else

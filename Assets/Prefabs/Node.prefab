@@ -176,6 +176,7 @@ MonoBehaviour:
   clip: {fileID: 8300000, guid: cbb97c8f8d93ef845b0ca88ec88c969a, type: 3}
   txt: {fileID: 921671113530209765}
   is_fake: 0
+  spawntime: 1
 --- !u!58 &7456035128085442530
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -251,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
