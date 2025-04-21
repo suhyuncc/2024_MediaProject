@@ -139,7 +139,6 @@ public class GameManager : MonoBehaviour
     private Camera _CurrentCam;//현재 카메라
 
     private int _currentItemIndex; // 현재 화면에서 얻은 아이템의 수
-    private bool is_setting;
 
     [Header("Toggles")]
     public bool after_Party = false; // 연회장 방문 유무
@@ -155,7 +154,6 @@ public class GameManager : MonoBehaviour
     {
         //Debug.Log("Awake_test");
         Instance = this;
-        is_setting = false;
     }
 
     // Start is called before the first frame update
@@ -216,27 +214,17 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            is_setting = !is_setting;
-
-            if(is_setting)
-            {
-                Setting_On();
-            }
-            else
-            {
-                Setting_Off();
-            }
-        }
+        
     }
 
+    //UI_Management로 옮김
     private void Setting_On()
     {
         _settingPanel.SetActive(true);
         _backBtn.SetActive(true);
     }
 
+    //UI_Management로 옮김
     private void Setting_Off()
     {
         _settingPanel.SetActive(false);
